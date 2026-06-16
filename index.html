@@ -1,19 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>夏文慧 Linda · VOID STUDIO — Design Without Rules</title>
+<title>夏文慧 Linda · Portfolio</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Bebas+Neue&family=Anton&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --black: #000000;
-  --white: #FFFFFF;
-}
-
+:root { --black: #000000; --white: #FFFFFF; --gray: #1a1a1a; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -25,627 +21,219 @@ body {
 }
 
 /* ─── CUSTOM CURSOR ─── */
-.cursor {
-  position: fixed;
-  width: 20px; height: 20px;
-  border: 2px solid var(--white);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
-  mix-blend-mode: difference;
+.cursor { position:fixed; width:20px; height:20px; border:2px solid var(--white); border-radius:50%; pointer-events:none; z-index:99999; transform:translate(-50%,-50%); transition:transform .08s,width .2s,height .2s,background .2s; mix-blend-mode:difference; }
+.cursor.expand { width:60px; height:60px; background:var(--white); }
+
+/* ─── GLOBAL EDIT TOGGLE ─── */
+.global-edit-bar { position:fixed; bottom:24px; right:40px; z-index:9998; display:flex; gap:12px; }
+.btn-global-edit, .btn-global-save {
+  font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.15em;
+  text-transform:uppercase; background:var(--white); color:var(--black);
+  border:2px solid var(--black); padding:10px 20px; cursor:pointer;
+  transition:all .2s;
 }
-.cursor.expand {
-  width: 60px; height: 60px;
-  background: var(--white);
-}
+.btn-global-edit:hover, .btn-global-save:hover { background:var(--black); color:var(--white); border-color:var(--white); }
+.btn-global-edit.active { background:var(--black); color:var(--white); border-color:var(--white); }
+.btn-pdf { font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; background:transparent; color:var(--white); border:1px solid rgba(255,255,255,.3); padding:10px 16px; cursor:pointer; transition:all .2s; }
+.btn-pdf:hover { border-color:var(--white); }
 
 /* ─── NAV ─── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 20px 40px;
-  mix-blend-mode: difference;
-}
-.nav-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px; letter-spacing: 0.15em;
-  color: var(--white);
-  text-decoration: none;
-}
-.nav-links {
-  display: flex; gap: 32px; list-style: none;
-}
-.nav-links a {
-  color: var(--white); text-decoration: none;
-  font-size: 11px; letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: opacity 0.2s;
-}
-.nav-links a:hover { opacity: 0.4; }
+nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:20px 40px; mix-blend-mode:difference; }
+.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.15em; color:var(--white); text-decoration:none; }
+.nav-links { display:flex; gap:32px; list-style:none; }
+.nav-links a { color:var(--white); text-decoration:none; font-size:11px; letter-spacing:.2em; text-transform:uppercase; transition:opacity .2s; }
+.nav-links a:hover { opacity:.4; }
 
 /* ─── HERO ─── */
-#hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  padding: 0 40px;
-}
+#hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; padding:0 40px; }
+.hero-noise { position:absolute; inset:0; opacity:.04; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size:256px 256px; pointer-events:none; }
+.hero-number { position:absolute; top:80px; right:40px; font-size:11px; letter-spacing:.3em; opacity:.3; writing-mode:vertical-rl; }
+.hero-line1 { font-family:'Anton',sans-serif; font-size:clamp(80px,13vw,200px); line-height:.88; letter-spacing:-.03em; color:var(--white); will-change:transform; }
+.hero-line2 { font-family:'Anton',sans-serif; font-size:clamp(40px,6vw,90px); line-height:1; letter-spacing:-.02em; color:transparent; -webkit-text-stroke:1.5px var(--white); margin-left:clamp(40px,12vw,220px); will-change:transform; }
+.hero-line3 { font-family:'Bebas Neue',sans-serif; font-size:clamp(100px,18vw,280px); line-height:.82; letter-spacing:-.04em; color:var(--white); margin-top:-10px; will-change:transform; }
+.hero-sub { font-size:12px; letter-spacing:.25em; text-transform:uppercase; opacity:.5; margin-top:40px; margin-left:4px; }
+.hero-marquee-wrap { position:absolute; bottom:0; left:0; right:0; overflow:hidden; border-top:1px solid rgba(255,255,255,.12); padding:14px 0; background:var(--black); }
+.hero-marquee { display:flex; gap:0; animation:marquee 18s linear infinite; white-space:nowrap; }
+.hero-marquee span { font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:.3em; padding:0 40px; opacity:.3; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.distort-text { display:inline-block; transition:transform .15s; will-change:transform; }
 
-.hero-noise {
-  position: absolute; inset: 0;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  pointer-events: none;
-}
+/* ─── SECTION: ABOUT (was Manifesto) ─── */
+#about { min-height:100vh; background:var(--white); color:var(--black); display:flex; align-items:center; position:relative; overflow:hidden; padding:80px 40px; }
+.about-inner { max-width:1200px; margin:0 auto; width:100%; position:relative; }
+.about-tag { font-size:10px; letter-spacing:.4em; text-transform:uppercase; opacity:.4; margin-bottom:24px; }
+.about-grid { display:grid; grid-template-columns:250px 1fr; gap:60px; align-items:start; }
+.about-avatar-wrap { position:relative; }
+.about-avatar { width:200px; height:200px; border-radius:50%; background:var(--black); display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:80px; color:var(--white); overflow:hidden; border:3px solid var(--black); }
+.about-avatar img { width:100%; height:100%; object-fit:cover; }
+.about-avatar-placeholder { opacity:.3; }
+.about-name { font-family:'Anton',sans-serif; font-size:clamp(50px,7vw,100px); line-height:.9; letter-spacing:-.04em; margin-bottom:8px; }
+.about-title-sm { font-size:13px; letter-spacing:.2em; text-transform:uppercase; opacity:.4; margin-bottom:24px; }
+.about-bio { font-size:15px; line-height:1.9; opacity:.6; max-width:500px; }
+.about-upload { margin-top:16px; font-size:10px; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; opacity:.3; border-bottom:1px dashed rgba(0,0,0,.3); display:inline-block; transition:opacity .2s; }
+.about-upload:hover { opacity:.7; }
+.about-num { position:absolute; right:0; top:-40px; font-family:'Bebas Neue',sans-serif; font-size:clamp(120px,18vw,260px); opacity:.05; line-height:1; pointer-events:none; }
 
-.hero-number {
-  position: absolute; top: 80px; right: 40px;
-  font-size: 11px; letter-spacing: 0.3em;
-  opacity: 0.3;
-  writing-mode: vertical-rl;
-}
+/* ─── SECTION: RESUME ─── */
+#resume { background:var(--black); padding:100px 40px; }
+.resume-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:60px; }
+.resume-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,10vw,140px); line-height:1; letter-spacing:-.02em; }
+.resume-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; }
+.resume-col-title { font-family:'Anton',sans-serif; font-size:14px; letter-spacing:.3em; text-transform:uppercase; opacity:.3; margin-bottom:32px; border-bottom:1px solid rgba(255,255,255,.1); padding-bottom:12px; }
+.resume-item { margin-bottom:28px; position:relative; padding-left:0; }
+.resume-item-title { font-weight:700; font-size:16px; letter-spacing:.05em; margin-bottom:4px; }
+.resume-item-sub { font-size:12px; opacity:.4; letter-spacing:.1em; text-transform:uppercase; margin-bottom:2px; }
+.resume-item-date { font-size:11px; opacity:.25; letter-spacing:.15em; margin-bottom:8px; }
+.resume-item-desc { font-size:13px; opacity:.5; line-height:1.7; }
 
-.hero-line1 {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(80px, 13vw, 200px);
-  line-height: 0.88;
-  letter-spacing: -0.03em;
-  color: var(--white);
-  will-change: transform;
-}
-.hero-line2 {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(40px, 6vw, 90px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--white);
-  margin-left: clamp(40px, 12vw, 220px);
-  will-change: transform;
-}
-.hero-line3 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(100px, 18vw, 280px);
-  line-height: 0.82;
-  letter-spacing: -0.04em;
-  color: var(--white);
-  margin-top: -10px;
-  will-change: transform;
-}
-.hero-sub {
-  font-size: 12px; letter-spacing: 0.25em;
-  text-transform: uppercase; opacity: 0.5;
-  margin-top: 40px; margin-left: 4px;
-}
+/* ─── SKILL BARS ─── */
+.skills-section { grid-column:1 / -1; margin-top:40px; }
+.skill-item { display:grid; grid-template-columns:160px 1fr 50px; align-items:center; gap:20px; margin-bottom:16px; }
+.skill-name { font-size:12px; letter-spacing:.15em; text-transform:uppercase; opacity:.6; }
+.skill-bar-wrap { height:4px; background:rgba(255,255,255,.08); position:relative; }
+.skill-bar-fill { height:100%; background:var(--white); transition:width .4s; }
+.skill-pct { font-size:11px; opacity:.3; letter-spacing:.05em; text-align:right; }
+.skill-input-wrap { display:none; }
+.editing .skill-input-wrap { display:flex; gap:8px; align-items:center; }
+.editing .skill-pct-static { display:none; }
+.skill-range { -webkit-appearance:none; width:100%; height:4px; background:rgba(255,255,255,.2); outline:none; cursor:pointer; }
+.skill-range::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; background:var(--white); cursor:pointer; }
+.skill-pct-input { font-family:'Space Grotesk',sans-serif; font-size:11px; width:40px; text-align:right; background:transparent; border:none; border-bottom:1px dashed rgba(255,255,255,.3); color:var(--white); outline:none; }
 
-.hero-marquee-wrap {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  overflow: hidden;
-  border-top: 1px solid rgba(255,255,255,0.12);
-  padding: 14px 0;
-  background: var(--black);
-}
-.hero-marquee {
-  display: flex; gap: 0;
-  animation: marquee 18s linear infinite;
-  white-space: nowrap;
-}
-.hero-marquee span {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px; letter-spacing: 0.3em;
-  padding: 0 40px; opacity: 0.3;
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
+/* ─── SECTION: PORTFOLIO GRID ─── */
+#portfolio { background:var(--white); color:var(--black); padding:100px 40px; }
+.portfolio-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:50px; }
+.portfolio-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,10vw,140px); line-height:1; letter-spacing:-.02em; }
+.portfolio-count { font-size:11px; letter-spacing:.3em; opacity:.3; text-transform:uppercase; padding-bottom:12px; }
+.portfolio-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:2px; background:rgba(0,0,0,.06); }
+.portfolio-card { background:var(--white); position:relative; cursor:pointer; overflow:hidden; border:1px solid rgba(0,0,0,.08); transition:all .3s; }
+.portfolio-card:hover { transform:translateY(-4px); }
+.portfolio-card:hover .pf-card-cover { transform:scale(1.05); }
+.pf-card-cover-wrap { width:100%; aspect-ratio:4/3; background:var(--black); overflow:hidden; position:relative; }
+.pf-card-cover { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+.pf-card-no-cover { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:clamp(20px,3vw,40px); color:rgba(255,255,255,.2); letter-spacing:.1em; }
+.pf-card-info { padding:20px; }
+.pf-card-num { font-size:10px; letter-spacing:.2em; opacity:.3; margin-bottom:6px; }
+.pf-card-title { font-family:'Anton',sans-serif; font-size:22px; letter-spacing:-.01em; margin-bottom:4px; }
+.pf-card-cat { font-size:10px; letter-spacing:.15em; text-transform:uppercase; opacity:.4; }
 
-/* ─── DISTORT TEXT ─── */
-.distort-text {
-  display: inline-block;
-  transition: transform 0.15s ease;
-  will-change: transform;
-}
+/* ─── PORTFOLIO DETAIL MODAL ─── */
+.port-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.95); z-index:10000; display:none; justify-content:center; align-items:flex-start; overflow-y:auto; padding:60px 20px; }
+.port-modal-overlay.open { display:flex; }
+.port-modal { background:var(--black); border:1px solid rgba(255,255,255,.1); max-width:900px; width:100%; position:relative; }
+.port-modal-close { position:absolute; top:16px; right:20px; font-size:28px; color:var(--white); background:none; border:none; cursor:pointer; z-index:10; opacity:.5; transition:opacity .2s; }
+.port-modal-close:hover { opacity:1; }
+.port-modal-images { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:2px; background:rgba(255,255,255,.05); }
+.port-modal-img-wrap { aspect-ratio:4/3; overflow:hidden; cursor:pointer; position:relative; background:var(--gray); }
+.port-modal-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.port-modal-img-wrap:hover img { transform:scale(1.05); }
+.port-modal-img-wrap .set-cover-btn { position:absolute; bottom:6px; right:6px; font-size:9px; letter-spacing:.1em; background:rgba(0,0,0,.7); color:#fff; border:1px solid rgba(255,255,255,.3); padding:3px 8px; cursor:pointer; display:none; text-transform:uppercase; }
+.port-modal-img-wrap:hover .set-cover-btn, .editing-modal .set-cover-btn { display:block; }
+.port-modal-add-img { aspect-ratio:4/3; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px dashed rgba(255,255,255,.15); cursor:pointer; color:rgba(255,255,255,.3); font-size:11px; letter-spacing:.15em; transition:all .2s; }
+.port-modal-add-img:hover { border-color:rgba(255,255,255,.5); color:rgba(255,255,255,.7); }
+.port-modal-add-img span { font-size:36px; margin-bottom:6px; opacity:.4; }
+.port-modal-info { padding:30px; }
+.port-modal-title { font-family:'Anton',sans-serif; font-size:clamp(30px,5vw,56px); letter-spacing:-.02em; margin-bottom:6px; }
+.port-modal-meta { font-size:11px; letter-spacing:.2em; text-transform:uppercase; opacity:.3; margin-bottom:16px; }
+.port-modal-desc { font-size:14px; line-height:1.8; opacity:.5; margin-bottom:20px; }
+.port-modal-link { display:inline-block; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--white); text-decoration:none; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:3px; transition:border-color .2s; }
+.port-modal-link:hover { border-color:var(--white); }
+.port-modal-del { margin-top:20px; font-size:10px; letter-spacing:.15em; color:rgba(255,80,80,.6); background:transparent; border:1px solid rgba(255,80,80,.3); padding:6px 16px; cursor:pointer; display:none; }
+.editing-modal .port-modal-del { display:inline-block; }
+.port-modal-del:hover { background:rgba(255,80,80,.15); }
 
-/* ─── SECTION: MANIFESTO ─── */
-#manifesto {
-  min-height: 100vh;
-  background: var(--white);
-  color: var(--black);
-  display: flex; align-items: center;
-  position: relative;
-  overflow: hidden;
-  padding: 80px 40px;
-}
-.manifesto-inner {
-  max-width: 1200px; margin: 0 auto; width: 100%;
-  position: relative;
-}
-.manifesto-tag {
-  font-size: 10px; letter-spacing: 0.4em;
-  text-transform: uppercase; opacity: 0.4;
-  margin-bottom: 40px;
-}
-.manifesto-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-}
-.m-word-big {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(60px, 10vw, 160px);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  color: var(--black);
-  will-change: transform;
-}
-.m-word-big.outline {
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--black);
-}
-.m-word-big.rotated {
-  transform: rotate(-8deg);
-  display: inline-block;
-  margin-top: 20px;
-}
-.m-word-big.skew {
-  transform: skewX(-10deg);
-  display: inline-block;
-}
-.manifesto-text {
-  font-size: 16px; line-height: 1.9;
-  opacity: 0.65; max-width: 400px;
-  align-self: end; padding-bottom: 10px;
-}
-.manifesto-num {
-  position: absolute; right: 0; top: -40px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(120px, 18vw, 260px);
-  opacity: 0.05;
-  line-height: 1;
-  pointer-events: none;
-}
-
-/* ─── SECTION: WORK ─── */
-#work {
-  background: var(--black);
-  padding: 80px 40px 120px;
-  position: relative;
-}
-.work-header {
-  display: flex; justify-content: space-between; align-items: flex-end;
-  margin-bottom: 60px;
-}
-.work-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(60px, 10vw, 140px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.work-count {
-  font-size: 11px; letter-spacing: 0.3em;
-  opacity: 0.3; text-transform: uppercase;
-  padding-bottom: 16px;
-}
-
-.work-list { display: flex; flex-direction: column; gap: 0; }
-.work-item {
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding: 28px 0;
-  display: grid;
-  grid-template-columns: 60px 1fr auto 120px;
-  align-items: center; gap: 40px;
-  cursor: pointer;
-  transition: background 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-.work-item::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: var(--white);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
-  z-index: 0;
-}
-.work-item:hover::after { transform: scaleX(1); }
-.work-item:hover .wi-num,
-.work-item:hover .wi-title,
-.work-item:hover .wi-cat,
-.work-item:hover .wi-year { color: var(--black); }
-.wi-num {
-  font-size: 11px; opacity: 0.3; letter-spacing: 0.2em;
-  position: relative; z-index: 1;
-  transition: color 0.2s;
-}
-.wi-title {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(28px, 4vw, 52px);
-  letter-spacing: -0.02em;
-  position: relative; z-index: 1;
-  transition: color 0.2s;
-}
-.wi-cat {
-  font-size: 11px; letter-spacing: 0.2em;
-  text-transform: uppercase; opacity: 0.4;
-  position: relative; z-index: 1;
-  transition: color 0.2s;
-}
-.wi-year {
-  text-align: right;
-  font-size: 11px; opacity: 0.3;
-  position: relative; z-index: 1;
-  transition: color 0.2s;
-}
-.work-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
-
-/* ─── SECTION: CHAOS GRID ─── */
-#chaos {
-  background: var(--black);
-  padding: 0 40px 120px;
-  position: relative;
-}
-.chaos-label {
-  font-size: 10px; letter-spacing: 0.4em;
-  text-transform: uppercase; opacity: 0.3;
-  margin-bottom: 60px; padding-top: 20px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-.chaos-container {
-  position: relative;
-  min-height: 700px;
-}
-/* Floating text elements — brutalist chaos layout */
-.chaos-el {
-  position: absolute;
-  font-family: 'Anton', sans-serif;
-  color: var(--white);
-  pointer-events: none;
-  will-change: transform;
-}
-.ce-1 { font-size: clamp(70px, 11vw, 160px); top: 0; left: 0; opacity: 1; letter-spacing: -0.04em; }
-.ce-2 { font-size: clamp(16px, 2vw, 30px); top: 60px; left: 42%; color: transparent; -webkit-text-stroke: 1px #fff; font-family: 'Space Grotesk'; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.6; }
-.ce-3 { font-size: clamp(50px, 8vw, 120px); bottom: 80px; right: 0; opacity: 0.06; letter-spacing: -0.05em; }
-.ce-4 { font-size: clamp(12px, 1.5vw, 18px); top: 38%; left: 20%; writing-mode: vertical-rl; letter-spacing: 0.3em; font-family: 'Space Grotesk'; opacity: 0.25; font-size: 11px; text-transform: uppercase; }
-.ce-5 { font-size: clamp(80px, 14vw, 200px); top: 30%; left: 30%; opacity: 0.03; z-index: 0; }
-.ce-6 { font-size: clamp(60px, 9vw, 140px); bottom: 0; left: 15%; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.4); }
-.ce-7 { font-size: 11px; letter-spacing: 0.3em; top: 50%; right: 5%; font-family: 'Space Grotesk'; opacity: 0.3; text-transform: uppercase; }
-.chaos-line {
-  position: absolute;
-  background: rgba(255,255,255,0.08);
-}
-.cl-1 { width: 1px; height: 300px; top: 0; left: 50%; }
-.cl-2 { height: 1px; width: 40%; top: 45%; left: 5%; }
-.chaos-dot {
-  position: absolute;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--white);
-}
-.cd-1 { top: 120px; left: 55%; }
-.cd-2 { top: 40%; right: 20%; opacity: 0.4; }
-
-/* ─── SECTION: PROCESS ─── */
-#process {
-  background: var(--white);
-  color: var(--black);
-  padding: 100px 40px;
-}
-.process-top {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 80px;
-}
-.process-title-wrap {}
-.p-big {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(60px, 9vw, 130px);
-  line-height: 0.9; letter-spacing: -0.04em;
-}
-.p-big-outline {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(60px, 9vw, 130px);
-  line-height: 0.9; letter-spacing: -0.04em;
-  color: transparent; -webkit-text-stroke: 1.5px var(--black);
-}
-.process-desc {
-  max-width: 280px; padding-top: 20px;
-  font-size: 14px; line-height: 1.8; opacity: 0.6;
-}
-.process-steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-.process-step {
-  border-left: 1px solid rgba(0,0,0,0.1);
-  padding: 30px 24px;
-  position: relative;
-}
-.ps-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 64px; line-height: 1;
-  opacity: 0.08; margin-bottom: 12px;
-}
-.ps-title {
-  font-size: 15px; font-weight: 700;
-  letter-spacing: 0.05em; margin-bottom: 10px;
-}
-.ps-desc { font-size: 13px; opacity: 0.5; line-height: 1.7; }
-
-/* ─── SECTION: MARQUEE MIDDLE ─── */
-.mid-marquee {
-  background: var(--white);
-  border-top: 1px solid rgba(0,0,0,0.1);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  overflow: hidden; padding: 18px 0;
-}
-.mid-marquee .hero-marquee { animation-duration: 22s; }
-.mid-marquee .hero-marquee span {
-  color: var(--black); opacity: 0.15;
-  font-size: 11px;
-}
+/* ─── LIGHTBOX ─── */
+.lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,.96); z-index:100001; display:none; align-items:center; justify-content:center; cursor:zoom-out; }
+.lightbox-overlay.open { display:flex; }
+.lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; }
+.lightbox-close { position:absolute; top:20px; right:30px; font-size:40px; color:#fff; background:none; border:none; cursor:pointer; opacity:.5; transition:opacity .2s; }
+.lightbox-close:hover { opacity:1; }
 
 /* ─── SECTION: CONTACT ─── */
-#contact {
-  background: var(--black);
-  padding: 120px 40px;
-  position: relative;
-  overflow: hidden;
-}
-.contact-bg-text {
-  position: absolute;
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(80px, 14vw, 220px);
-  opacity: 0.04; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  white-space: nowrap; pointer-events: none;
-  letter-spacing: -0.04em;
-}
-.contact-inner {
-  max-width: 1000px; margin: 0 auto;
-  position: relative; z-index: 1;
-}
-.contact-label {
-  font-size: 11px; letter-spacing: 0.4em;
-  text-transform: uppercase; opacity: 0.3;
-  margin-bottom: 40px;
-}
-.contact-cta {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(50px, 8vw, 120px);
-  line-height: 0.9; letter-spacing: -0.03em;
-  margin-bottom: 60px;
-}
-.contact-cta span {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--white);
-}
-.contact-links {
-  display: flex; gap: 40px; flex-wrap: wrap;
-}
-.contact-link {
-  font-size: 13px; letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--white); text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 4px;
-  transition: border-color 0.2s, opacity 0.2s;
-}
-.contact-link:hover { border-color: var(--white); }
+#contact { background:var(--black); padding:120px 40px; position:relative; overflow:hidden; }
+.contact-bg-text { position:absolute; font-family:'Anton',sans-serif; font-size:clamp(80px,14vw,220px); opacity:.04; top:50%; left:50%; transform:translate(-50%,-50%); white-space:nowrap; pointer-events:none; letter-spacing:-.04em; }
+.contact-inner { max-width:1000px; margin:0 auto; position:relative; z-index:1; }
+.contact-label { font-size:11px; letter-spacing:.4em; text-transform:uppercase; opacity:.3; margin-bottom:40px; }
+.contact-cta { font-family:'Anton',sans-serif; font-size:clamp(50px,8vw,120px); line-height:.9; letter-spacing:-.03em; margin-bottom:20px; }
+.contact-cta span { color:transparent; -webkit-text-stroke:1px var(--white); }
+.contact-desc { font-size:13px; opacity:.4; line-height:1.8; margin-bottom:40px; max-width:400px; }
+.contact-links { display:flex; flex-wrap:wrap; gap:40px; }
+.contact-item { display:flex; flex-direction:column; gap:4px; }
+.contact-item-label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; opacity:.2; }
+.contact-item-value { font-size:13px; letter-spacing:.1em; color:var(--white); text-decoration:none; border-bottom:1px solid rgba(255,255,255,.15); padding-bottom:3px; transition:border-color .2s; }
+.contact-item-value:hover { border-color:var(--white); }
 
-/* ─── FOOTER ─── */
-footer {
-  background: var(--black);
-  border-top: 1px solid rgba(255,255,255,0.06);
-  padding: 24px 40px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.footer-copy {
-  font-size: 11px; opacity: 0.2; letter-spacing: 0.15em;
-}
+/* ─── EDIT MODE GLOBAL ─── */
+.edit-toggle { position:relative; font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; background:transparent; color:var(--black); border:1px solid rgba(0,0,0,.3); padding:6px 18px; cursor:pointer; transition:all .2s; z-index:1; }
+.edit-toggle:hover { border-color:var(--black); background:rgba(0,0,0,.03); }
+.edit-toggle.active { background:var(--black); color:var(--white); border-color:var(--black); }
+#contact .edit-toggle, #resume .edit-toggle { color:var(--white); border-color:rgba(255,255,255,.3); }
+#contact .edit-toggle:hover, #resume .edit-toggle:hover { border-color:var(--white); }
+#contact .edit-toggle.active, #resume .edit-toggle.active { background:var(--white); color:var(--black); border-color:var(--white); }
 
-/* ─── SCROLL ANIMATION BASE ─── */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
-}
-.reveal.visible { opacity: 1; transform: none; }
+.edit-inline { font-family:'Space Grotesk',sans-serif; background:transparent; border:none; border-bottom:1px dashed currentColor; color:inherit; opacity:.6; outline:none; font-size:inherit; letter-spacing:inherit; width:100%; padding:2px 0; }
+.edit-inline:focus { opacity:1; }
+.edit-textarea { font-family:'Space Grotesk',sans-serif; background:transparent; border:1px dashed currentColor; color:inherit; opacity:.6; outline:none; font-size:inherit; line-height:1.7; width:100%; padding:8px; resize:vertical; min-height:80px; }
+.edit-textarea:focus { opacity:1; }
+
+.editable-section { position:relative; }
+.edit-hint { display:none; font-size:10px; letter-spacing:.15em; opacity:.3; position:absolute; top:-20px; right:0; text-transform:uppercase; }
+.editing-section .edit-hint { display:block; }
+
+.btn-add { font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase; background:transparent; border:1px dashed rgba(255,255,255,.2); color:rgba(255,255,255,.5); padding:12px 20px; cursor:pointer; transition:all .2s; margin-top:16px; }
+.btn-add:hover { border-style:solid; border-color:var(--white); color:var(--white); }
+#about .btn-add, #portfolio .btn-add { color:rgba(0,0,0,.4); border-color:rgba(0,0,0,.2); }
+#about .btn-add:hover, #portfolio .btn-add:hover { color:var(--black); border-color:var(--black); }
+.btn-del-sm { font-size:10px; letter-spacing:.1em; background:transparent; color:rgba(255,80,80,.5); border:1px solid rgba(255,80,80,.2); padding:2px 10px; cursor:pointer; margin-left:8px; transition:all .2s; }
+.btn-del-sm:hover { background:rgba(255,80,80,.15); color:rgba(255,80,80,1); border-color:rgba(255,80,80,.6); }
+
+/* ─── GLOBAL EDIT TOAST ─── */
+.edit-toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--white); color:var(--black); font-size:11px; letter-spacing:.15em; padding:12px 28px; z-index:99999; opacity:0; transition:opacity .3s, transform .3s; pointer-events:none; border:2px solid var(--black); }
+.edit-toast.show { opacity:1; transform:translateX(-50%) translateY(-10px); }
+
+/* ─── SCROLL ANIMATION ─── */
+.reveal { opacity:0; transform:translateY(40px); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal.visible { opacity:1; transform:none; }
 
 /* ─── GLITCH ─── */
-.glitch {
-  position: relative;
-  display: inline-block;
-}
-.glitch::before, .glitch::after {
-  content: attr(data-text);
-  position: absolute; left: 0; top: 0;
-  width: 100%; height: 100%;
-  font-family: inherit; font-size: inherit;
-  font-weight: inherit; line-height: inherit;
-  letter-spacing: inherit;
-}
-.glitch::before {
-  color: var(--white);
-  animation: glitch1 3.5s infinite;
-  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
-}
-.glitch::after {
-  color: var(--white);
-  animation: glitch2 3.5s infinite;
-  clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
-}
-@keyframes glitch1 {
-  0%,89%,100% { transform: none; opacity: 0; }
-  90% { transform: translate(-3px, 1px) skewX(4deg); opacity: 0.8; }
-  92% { transform: translate(3px, -1px); opacity: 0.8; }
-  94% { transform: none; opacity: 0; }
-  96% { transform: translate(-5px, 2px); opacity: 0.8; }
-  98% { transform: none; opacity: 0; }
-}
-@keyframes glitch2 {
-  0%,87%,100% { transform: none; opacity: 0; }
-  88% { transform: translate(4px, -2px) skewX(-3deg); opacity: 0.7; }
-  90% { transform: translate(-2px, 1px); opacity: 0.7; }
-  92% { transform: none; opacity: 0; }
-}
-
-/* ─── EDIT MODE ─── */
-.edit-toggle {
-  position: relative;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px; letter-spacing: 0.2em;
-  text-transform: uppercase;
-  background: transparent;
-  color: var(--white);
-  border: 1px solid rgba(255,255,255,0.3);
-  padding: 6px 18px;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 1;
-}
-.edit-toggle:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
-.edit-toggle.active { background: var(--white); color: var(--black); border-color: var(--white); }
-
-.edit-guidance {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px; letter-spacing: 0.15em;
-  opacity: 0.4; margin-top: 8px; margin-bottom: 0;
-  transition: opacity 0.3s;
-}
-
-.work-item.editing {
-  background: rgba(255,255,255,0.03);
-  border-top-color: rgba(255,255,255,0.3) !important;
-}
-.work-item.editing + .work-item { border-top-color: rgba(255,255,255,0.3) !important; }
-.work-item.editing:hover { background: rgba(255,255,255,0.03); }
-.work-item.editing:hover .wi-title,
-.work-item.editing:hover .wi-num,
-.work-item.editing:hover .wi-cat,
-.work-item.editing:hover .wi-year { color: var(--white); }
-.work-item.editing:hover::after { transform: none; }
-
-.edit-input {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(20px, 3vw, 40px);
-  background: transparent;
-  border: none;
-  border-bottom: 1px dashed rgba(255,255,255,0.3);
-  color: var(--white);
-  width: 100%;
-  outline: none;
-  letter-spacing: -0.02em;
-  position: relative; z-index: 1;
-}
-.edit-input:focus { border-bottom-color: var(--white); }
-.edit-input-sm {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px; letter-spacing: 0.2em;
-  text-transform: uppercase;
-  background: transparent;
-  border: none;
-  border-bottom: 1px dashed rgba(255,255,255,0.2);
-  color: var(--white);
-  opacity: 0.6;
-  width: 90%;
-  outline: none;
-  position: relative; z-index: 1;
-}
-.edit-input-sm:focus { opacity: 1; border-bottom-color: var(--white); }
-.edit-input-year {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px; text-align: right;
-  background: transparent;
-  border: none;
-  border-bottom: 1px dashed rgba(255,255,255,0.2);
-  color: var(--white);
-  opacity: 0.5;
-  width: 60px;
-  outline: none;
-  position: relative; z-index: 1;
-}
-.edit-input-year:focus { opacity: 1; border-bottom-color: var(--white); }
-
-.btn-del {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px; letter-spacing: 0.15em;
-  background: transparent;
-  color: rgba(255,80,80,0.6);
-  border: 1px solid rgba(255,80,80,0.3);
-  padding: 4px 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  position: relative; z-index: 1;
-}
-.btn-del:hover { background: rgba(255,80,80,0.15); border-color: rgba(255,80,80,0.7); color: rgba(255,80,80,1); }
-
-.btn-add-work {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px; letter-spacing: 0.2em;
-  text-transform: uppercase;
-  background: transparent;
-  color: var(--white);
-  border: 1px dashed rgba(255,255,255,0.25);
-  padding: 16px 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 16px;
-  width: 100%;
-  text-align: left;
-}
-.btn-add-work:hover { border-style: solid; border-color: var(--white); background: rgba(255,255,255,0.03); }
-
-.edit-toast {
-  position: fixed; bottom: 40px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--white);
-  color: var(--black);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px; letter-spacing: 0.15em;
-  padding: 12px 28px;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s, transform 0.3s;
-  pointer-events: none;
-  border: 2px solid var(--black);
-}
-.edit-toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+.glitch { position:relative; display:inline-block; }
+.glitch::before, .glitch::after { content:attr(data-text); position:absolute; left:0; top:0; width:100%; height:100%; font-family:inherit; font-size:inherit; font-weight:inherit; line-height:inherit; letter-spacing:inherit; }
+.glitch::before { color:var(--white); animation:glitch1 3.5s infinite; clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%); }
+.glitch::after { color:var(--white); animation:glitch2 3.5s infinite; clip-path:polygon(0 60%,100% 60%,100% 75%,0 75%); }
+@keyframes glitch1 { 0%,89%,100%{transform:none;opacity:0} 90%{transform:translate(-3px,1px) skewX(4deg);opacity:.8} 92%{transform:translate(3px,-1px);opacity:.8} 94%{transform:none;opacity:0} 96%{transform:translate(-5px,2px);opacity:.8} 98%{transform:none;opacity:0} }
+@keyframes glitch2 { 0%,87%,100%{transform:none;opacity:0} 88%{transform:translate(4px,-2px) skewX(-3deg);opacity:.7} 90%{transform:translate(-2px,1px);opacity:.7} 92%{transform:none;opacity:0} }
 
 /* ─── RESPONSIVE ─── */
-@media (max-width: 768px) {
-  nav { padding: 16px 20px; }
-  #hero, #manifesto, #work, #chaos, #process, #contact { padding-left: 20px; padding-right: 20px; }
-  .manifesto-grid { grid-template-columns: 1fr; }
-  .work-item { grid-template-columns: 40px 1fr; gap: 16px; }
-  .wi-cat, .wi-year { display: none; }
-  .work-item.editing { grid-template-columns: 1fr; gap: 8px; }
-  .work-item.editing .wi-cat,
-  .work-item.editing .wi-year { display: block; }
-  .process-steps { grid-template-columns: 1fr 1fr; }
-  .contact-links { gap: 20px; }
+@media (max-width:768px) {
+  nav { padding:16px 20px; }
+  .nav-links { gap:16px; }
+  #hero, #about, #resume, #portfolio, #contact { padding-left:20px; padding-right:20px; }
+  .about-grid { grid-template-columns:1fr; gap:30px; }
+  .about-avatar { width:120px; height:120px; font-size:50px; }
+  .resume-grid { grid-template-columns:1fr; gap:30px; }
+  .portfolio-grid { grid-template-columns:1fr; }
+  .contact-links { gap:20px; }
+  .skill-item { grid-template-columns:100px 1fr 40px; gap:12px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Custom cursor -->
 <div class="cursor" id="cursor"></div>
+
+<!-- GLOBAL EDIT BAR -->
+<div class="global-edit-bar">
+  <button class="btn-global-edit" id="btnGlobalEdit" title="进入编辑模式后可修改所有内容">✎ 编辑模式</button>
+  <button class="btn-pdf" id="btnPdf" title="导出简历为PDF" style="display:none">📄 导出PDF</button>
+</div>
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#">VOID</a>
+  <a class="nav-logo" href="#">夏文慧</a>
   <ul class="nav-links">
-    <li><a href="#work">Work</a></li>
-    <li><a href="#process">Process</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#resume">Resume</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -654,166 +242,111 @@ footer {
 <section id="hero">
   <div class="hero-noise"></div>
   <div class="hero-number">EST. 2024 — ∞</div>
-
-  <div class="hero-line1 distort-text" id="hl1">
-    <span class="glitch" data-text="DESIGN">DESIGN</span>
-  </div>
+  <div class="hero-line1 distort-text" id="hl1"><span class="glitch" data-text="DESIGN">DESIGN</span></div>
   <div class="hero-line2 distort-text" id="hl2">WITHOUT</div>
   <div class="hero-line3 distort-text" id="hl3">RULES.</div>
-
   <div class="hero-sub reveal">夏文慧 Linda · 个人作品集 · Portfolio</div>
-
   <div class="hero-marquee-wrap">
     <div class="hero-marquee">
-      <span>BRANDING</span><span>·</span>
-      <span>IDENTITY</span><span>·</span>
-      <span>ART DIRECTION</span><span>·</span>
-      <span>WEB DESIGN</span><span>·</span>
-      <span>MOTION</span><span>·</span>
-      <span>STRATEGY</span><span>·</span>
-      <span>BRANDING</span><span>·</span>
-      <span>IDENTITY</span><span>·</span>
-      <span>ART DIRECTION</span><span>·</span>
-      <span>WEB DESIGN</span><span>·</span>
-      <span>MOTION</span><span>·</span>
-      <span>STRATEGY</span><span>·</span>
+      <span>BRANDING</span><span>·</span><span>IDENTITY</span><span>·</span><span>ART DIRECTION</span><span>·</span><span>WEB DESIGN</span><span>·</span><span>MOTION</span><span>·</span><span>STRATEGY</span><span>·</span>
+      <span>BRANDING</span><span>·</span><span>IDENTITY</span><span>·</span><span>ART DIRECTION</span><span>·</span><span>WEB DESIGN</span><span>·</span><span>MOTION</span><span>·</span><span>STRATEGY</span><span>·</span>
     </div>
   </div>
 </section>
 
-<!-- MANIFESTO -->
-<section id="manifesto">
-  <div class="manifesto-inner">
-    <div class="manifesto-tag reveal">— Manifesto 01</div>
-    <div class="manifesto-num">01</div>
-    <div class="manifesto-grid">
-      <div>
-        <div class="m-word-big reveal">BREAK</div>
-        <div class="m-word-big outline reveal" style="transition-delay:0.1s">THE</div>
-        <div class="m-word-big rotated reveal" style="transition-delay:0.2s">GRID.</div>
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:12px">
-        <p class="manifesto-text reveal" style="transition-delay:0.25s">
-          夏文慧 · Linda<br><br>
-          Design is a weapon. Not a decoration.<br>
-          We don't make things pretty — we make things impossible to ignore.<br>
-          Rules exist to be understood, then destroyed.
-        </p>
-        <div style="margin-top:40px" class="reveal" style="transition-delay:0.3s">
-          <div class="m-word-big skew" style="font-size:clamp(40px,6vw,80px)">CHAOS</div>
-          <div style="font-size:11px;letter-spacing:0.3em;opacity:0.3;margin-top:6px;text-transform:uppercase">is a methodology</div>
+<!-- ABOUT -->
+<section id="about" class="editable-section">
+  <div class="about-inner">
+    <div class="about-tag reveal">— About / 01</div>
+    <div class="about-num">01</div>
+    <div class="about-grid">
+      <div class="about-avatar-wrap reveal">
+        <div class="about-avatar" id="avatarContainer">
+          <img id="avatarImg" src="" style="display:none" alt="Avatar">
+          <span class="about-avatar-placeholder" id="avatarPlaceholder">XW</span>
         </div>
+        <label class="about-upload edit-only" id="avatarUpload"><input type="file" accept="image/*" hidden id="avatarInput">更新头像</label>
+      </div>
+      <div>
+        <div class="about-name reveal" id="aboutName">夏文慧 Linda</div>
+        <div class="about-title-sm reveal" id="aboutTitle">Designer & Creative</div>
+        <div class="about-bio reveal" id="aboutBio">热爱设计，不拘泥于规则。将想法转化为独特的视觉语言，在无序中寻找秩序。</div>
+        <div class="edit-hint">双击文字编辑 · 点击头像上传</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WORK -->
-<section id="work">
-  <div class="work-header">
-    <div class="work-title reveal">SELECTED<br>WORK</div>
+<!-- RESUME -->
+<section id="resume" class="editable-section">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px">
+    <div class="resume-title reveal">RESUME</div>
+    <div class="edit-hint" style="position:static">点击文字编辑 · 拖动进度条调技能</div>
+  </div>
+  <div class="resume-grid">
+    <div>
+      <div class="resume-col-title reveal">Education 教育经历</div>
+      <div id="eduList"></div>
+      <button class="btn-add edit-only" id="btnAddEdu">+ 添加教育经历</button>
+    </div>
+    <div>
+      <div class="resume-col-title reveal">Experience 工作经历</div>
+      <div id="expList"></div>
+      <button class="btn-add edit-only" id="btnAddExp">+ 添加工作经历</button>
+    </div>
+    <div class="skills-section">
+      <div class="resume-col-title reveal">Skills 技能</div>
+      <div id="skillList"></div>
+      <button class="btn-add edit-only" id="btnAddSkill">+ 添加技能</button>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="editable-section">
+  <div class="portfolio-header">
+    <div class="portfolio-title reveal">PORTFOLIO</div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-      <div class="work-count reveal" id="work-count">006 Projects</div>
-      <button class="edit-toggle reveal" id="editToggle" title="点击进入编辑模式，可添加/修改/删除作品">✎ 编辑作品</button>
-      <p class="edit-guidance" id="editGuidance" style="display:none">单击作品编辑 · 点 ✕ 删除 · 点「+」添加</p>
+      <div class="portfolio-count reveal" id="pfCount">006 Projects</div>
+      <div class="edit-hint" style="position:static">点击作品查看详情 · 编辑模式可增删</div>
     </div>
   </div>
-
-  <div class="work-list" id="workList">
-    <!-- dynamically rendered -->
-  </div>
-
-  <button class="btn-add-work" id="btnAddWork" style="display:none">+ 添加新作品</button>
+  <div class="portfolio-grid" id="pfGrid"></div>
+  <button class="btn-add edit-only" id="btnAddPf">+ 添加作品项目</button>
 </section>
-
-<!-- CHAOS GRID -->
-<section id="chaos">
-  <div class="chaos-label">— Typographic Chaos / Section 02</div>
-  <div class="chaos-container">
-    <div class="chaos-line cl-1"></div>
-    <div class="chaos-line cl-2"></div>
-    <div class="chaos-dot cd-1"></div>
-    <div class="chaos-dot cd-2"></div>
-    <div class="chaos-el ce-1" id="ce1">MAKE</div>
-    <div class="chaos-el ce-2">IMPOSSIBLE THINGS</div>
-    <div class="chaos-el ce-3">NOISE</div>
-    <div class="chaos-el ce-4">夏文慧 · Linda · VOID · 2026</div>
-    <div class="chaos-el ce-5">∞</div>
-    <div class="chaos-el ce-6" id="ce6">LOUD</div>
-    <div class="chaos-el ce-7">Art Direction / Craft / Fearlessness</div>
-  </div>
-</section>
-
-<!-- PROCESS -->
-<section id="process">
-  <div class="process-top reveal">
-    <div class="process-title-wrap">
-      <div class="p-big">HOW</div>
-      <div class="p-big-outline">WE</div>
-      <div class="p-big">WORK.</div>
-    </div>
-    <p class="process-desc">
-      Four brutal steps. No fluff, no mood boards for the sake of it. Just pressure-tested creative method.
-    </p>
-  </div>
-  <div class="process-steps">
-    <div class="process-step reveal">
-      <div class="ps-num">01</div>
-      <div class="ps-title">BREAK IT DOWN</div>
-      <div class="ps-desc">We dissect the brief until we find the thing no one said out loud.</div>
-    </div>
-    <div class="process-step reveal" style="transition-delay:0.1s">
-      <div class="ps-num">02</div>
-      <div class="ps-title">MAKE IT WRONG</div>
-      <div class="ps-desc">First drafts should be wrong. Wrong is where new language lives.</div>
-    </div>
-    <div class="process-step reveal" style="transition-delay:0.2s">
-      <div class="ps-num">03</div>
-      <div class="ps-title">PUSH IT HARD</div>
-      <div class="ps-desc">When it feels too far, we go further. Comfort is the enemy.</div>
-    </div>
-    <div class="process-step reveal" style="transition-delay:0.3s">
-      <div class="ps-num">04</div>
-      <div class="ps-title">MAKE IT REAL</div>
-      <div class="ps-desc">Chaos earns its keep only when it works. Precision is the final weapon.</div>
-    </div>
-  </div>
-</section>
-
-<!-- MID MARQUEE -->
-<div class="mid-marquee">
-  <div class="hero-marquee">
-    <span>ANTI-SAFE</span><span>·</span>
-    <span>ANTI-BORING</span><span>·</span>
-    <span>ANTI-BEIGE</span><span>·</span>
-    <span>ANTI-NORMAL</span><span>·</span>
-    <span>ANTI-SAFE</span><span>·</span>
-    <span>ANTI-BORING</span><span>·</span>
-    <span>ANTI-BEIGE</span><span>·</span>
-    <span>ANTI-NORMAL</span><span>·</span>
-    <span>ANTI-SAFE</span><span>·</span>
-    <span>ANTI-BORING</span><span>·</span>
-    <span>ANTI-BEIGE</span><span>·</span>
-    <span>ANTI-NORMAL</span><span>·</span>
-  </div>
-</div>
 
 <!-- CONTACT -->
 <section id="contact">
-  <div class="contact-bg-text">VOID</div>
+  <div class="contact-bg-text" id="contactBgText">LINDA</div>
   <div class="contact-inner">
-    <div class="contact-label reveal">— Let's Work / Section 03</div>
-    <div class="contact-cta reveal">
-      GOT A <span>PROJECT?</span><br>LET'S MAKE<br>SOMETHING<br><span>DANGEROUS.</span>
-    </div>
-    <div class="contact-links reveal">
-      <a class="contact-link" href="mailto:xiawenhui@example.com">xiawenhui@example.com</a>
-      <a class="contact-link" href="#">Instagram</a>
-      <a class="contact-link" href="#">Behance</a>
-      <a class="contact-link" href="#">Twitter / X</a>
-    </div>
+    <div class="contact-label reveal">— Contact / 04</div>
+    <div class="contact-cta reveal">GOT A <span>PROJECT?</span><br>LET'S MAKE<br><span>MAGIC.</span></div>
+    <p class="contact-desc reveal" id="contactDesc">欢迎通过以下方式联系我，期待与您的合作。</p>
+    <div class="contact-links reveal" id="contactLinks"></div>
   </div>
 </section>
+
+<!-- PORTFOLIO DETAIL MODAL -->
+<div class="port-modal-overlay" id="pfModalOverlay">
+  <div class="port-modal" id="pfModal">
+    <button class="port-modal-close" id="pfModalClose">&times;</button>
+    <div class="port-modal-images" id="pfModalImages"></div>
+    <div class="port-modal-info">
+      <div class="port-modal-title" id="pfModalTitle"></div>
+      <div class="port-modal-meta" id="pfModalMeta"></div>
+      <div class="port-modal-desc" id="pfModalDesc"></div>
+      <a class="port-modal-link" id="pfModalLink" href="#" target="_blank">View Project</a>
+      <br>
+      <button class="port-modal-del" id="pfModalDel">✕ 删除此作品</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -822,306 +355,546 @@ footer {
 </footer>
 
 <script>
+// ══════════════════════════════════════
 // ─── CURSOR ───
+// ══════════════════════════════════════
 const cursor = document.getElementById('cursor');
-let mx = 0, my = 0;
 document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top = my + 'px';
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
 });
-document.querySelectorAll('a, button, .process-step').forEach(el => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+['a','button','.portfolio-card','.port-modal-img-wrap','.about-avatar','label'].forEach(sel => {
+  document.querySelectorAll(sel).forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+  });
 });
-// 作品项和编辑元素使用事件委托
 document.addEventListener('mouseover', e => {
-  const target = e.target.closest('.work-item:not(.editing), .btn-add-work, .btn-del, .edit-toggle');
-  if (target) cursor.classList.add('expand');
+  const t = e.target.closest('a, button, .portfolio-card, .port-modal-img-wrap, .about-avatar, label');
+  if (t) cursor.classList.add('expand');
 });
 document.addEventListener('mouseout', e => {
-  const target = e.target.closest('.work-item:not(.editing), .btn-add-work, .btn-del, .edit-toggle');
-  if (target && !e.relatedTarget?.closest('.work-item:not(.editing), .btn-add-work, .btn-del, .edit-toggle')) {
+  const t = e.target.closest('a, button, .portfolio-card, .port-modal-img-wrap, .about-avatar, label');
+  if (t && !e.relatedTarget?.closest('a, button, .portfolio-card, .port-modal-img-wrap, .about-avatar, label')) {
     cursor.classList.remove('expand');
   }
 });
 
+// ══════════════════════════════════════
 // ─── SCROLL REVEAL ───
-const revealEls = document.querySelectorAll('.reveal');
+// ══════════════════════════════════════
 const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.12 });
-revealEls.forEach(el => revealObserver.observe(el));
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+function reObserve() { document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el)); }
 
-// ─── HERO PARALLAX + DISTORT on scroll ───
-function lerp(a, b, t) { return a + (b - a) * t; }
-
-let scrollY = 0;
+// ══════════════════════════════════════
+// ─── HERO PARALLAX + DISTORT ───
+// ══════════════════════════════════════
 window.addEventListener('scroll', () => {
-  scrollY = window.scrollY;
-  applyDistort();
-  applyParallax();
-  applyChaosParallax();
+  const s = window.scrollY, p = Math.min(s / window.innerHeight, 1), sk = p * 12;
+  const h1=document.getElementById('hl1'), h2=document.getElementById('hl2'), h3=document.getElementById('hl3');
+  h1.style.transform = `translateY(${p*-60}px) skewX(${-sk*.5}deg) scaleX(${1+p*.18})`;
+  h2.style.transform = `translateY(${p*-30}px) skewX(${sk}deg) translateX(${p*40}px)`;
+  h3.style.transform = `translateY(${p*-10}px) scaleX(${1-p*.06}) scaleY(${1-p*.08})`;
+  h1.style.opacity = 1-p*.6; h2.style.opacity = 1-p*.8; h3.style.opacity = 1-p*.5;
 });
-
-function applyDistort() {
-  const progress = Math.min(scrollY / window.innerHeight, 1);
-  const hl1 = document.getElementById('hl1');
-  const hl2 = document.getElementById('hl2');
-  const hl3 = document.getElementById('hl3');
-
-  // Skew + scale distortion on scroll
-  const skewVal = progress * 12;
-  const scaleX = 1 + progress * 0.18;
-  const scaleY = 1 - progress * 0.08;
-
-  hl1.style.transform = `translateY(${progress * -60}px) skewX(${-skewVal * 0.5}deg) scaleX(${scaleX})`;
-  hl2.style.transform = `translateY(${progress * -30}px) skewX(${skewVal}deg) translateX(${progress * 40}px)`;
-  hl3.style.transform = `translateY(${progress * -10}px) scaleX(${1 - progress * 0.06}) scaleY(${scaleY})`;
-
-  // Opacity fade
-  hl1.style.opacity = 1 - progress * 0.6;
-  hl2.style.opacity = 1 - progress * 0.8;
-  hl3.style.opacity = 1 - progress * 0.5;
-}
-
-function applyParallax() {
-  // Manifesto words
-  const mWords = document.querySelectorAll('.m-word-big');
-  mWords.forEach((el, i) => {
-    const rect = el.getBoundingClientRect();
-    const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-    const shift = center * 0.04 * (i % 2 === 0 ? 1 : -1);
-    el.style.transform = el.classList.contains('rotated')
-      ? `rotate(-8deg) translateX(${shift}px)`
-      : el.classList.contains('skew')
-        ? `skewX(-10deg) translateX(${shift}px)`
-        : `translateX(${shift}px)`;
-  });
-}
-
-function applyChaosParallax() {
-  const ce1 = document.getElementById('ce1');
-  const ce6 = document.getElementById('ce6');
-  const section = document.getElementById('chaos');
-  if (!section) return;
-  const rect = section.getBoundingClientRect();
-  const progress = -rect.top / window.innerHeight;
-  if (ce1) ce1.style.transform = `translateY(${progress * 40}px)`;
-  if (ce6) ce6.style.transform = `translateY(${progress * -30}px) translateX(${progress * 20}px)`;
-}
-
-// ─── GLITCH RANDOM TRIGGER ───
+document.getElementById('hero').addEventListener('mousemove', e => {
+  const dx = (e.clientX - innerWidth/2) / (innerWidth/2);
+  document.getElementById('hl1').style.letterSpacing = `${-0.03+dx*.02}em`;
+  document.getElementById('hl3').style.letterSpacing = `${-0.04-dx*.01}em`;
+});
+// Glitch
 setInterval(() => {
-  const glitch = document.querySelector('.glitch');
-  if (!glitch) return;
-  glitch.style.animation = 'none';
-  glitch.offsetHeight; // reflow
-  glitch.style.animation = '';
+  const g = document.querySelector('.glitch');
+  if (g) { g.style.animation='none'; g.offsetHeight; g.style.animation=''; }
 }, 6000);
 
-// ─── MOUSE-FOLLOW subtle tilt on hero ───
-document.getElementById('hero').addEventListener('mousemove', e => {
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const dx = (e.clientX - cx) / cx;
-  const dy = (e.clientY - cy) / cy;
-  document.getElementById('hl1').style.letterSpacing = `${-0.03 + dx * 0.02}em`;
-  document.getElementById('hl3').style.letterSpacing = `${-0.04 - dx * 0.01}em`;
+// ══════════════════════════════════════
+// ─── DATA MODEL ───
+// ══════════════════════════════════════
+const DEF = {
+  about: {
+    name: '夏文慧 Linda',
+    title: 'Designer & Creative',
+    bio: '热爱设计，不拘泥于规则。将想法转化为独特的视觉语言，在无序中寻找秩序。',
+    avatar: ''
+  },
+  resume: {
+    education: [
+      { school: 'University of Design', degree: 'B.A. Visual Communication', date: '2020 — 2024', desc: '主修视觉传达设计，辅修数字媒体。毕业作品获学院最佳创意奖。' },
+      { school: 'Art Academy', degree: 'Design Foundation', date: '2018 — 2020', desc: '系统学习设计基础理论，参与多个跨学科项目。' }
+    ],
+    experience: [
+      { company: 'Creative Studio', role: 'Junior Designer', date: '2024 — Present', desc: '负责品牌视觉设计和社交媒体视觉内容创作，参与多个商业项目。' },
+      { company: 'Design Agency', role: 'Design Intern', date: '2023 — 2024', desc: '协助资深设计师完成品牌VI、包装设计等项目，积累实战经验。' }
+    ],
+    skills: [
+      { name: 'Photoshop', level: 90 },
+      { name: 'Illustrator', level: 85 },
+      { name: 'Figma', level: 80 },
+      { name: 'After Effects', level: 70 },
+      { name: 'Blender / 3D', level: 55 },
+      { name: 'HTML / CSS', level: 60 }
+    ]
+  },
+  portfolio: [
+    { title: 'OBLIVION BRAND', cat: 'Identity · Print', year: '2024', desc: 'A complete brand identity system for a fictional avant-garde fashion label.', link: '', cover: '', images: [] },
+    { title: 'FRAGMENT DIGITAL', cat: 'Web · Motion', year: '2024', desc: 'Interactive web experience exploring digital fragmentation and reconstruction.', link: '', cover: '', images: [] },
+    { title: 'ZERO GALLERY', cat: 'Art Direction', year: '2025', desc: 'Art direction and spatial design for an experimental gallery exhibition.', link: '', cover: '', images: [] },
+    { title: 'VOID OBJECTS', cat: 'Product · 3D', year: '2025', desc: 'A series of 3D rendered objects exploring the tension between form and void.', link: '', cover: '', images: [] },
+    { title: 'AXIS FASHION', cat: 'Campaign · Brand', year: '2025', desc: 'Full campaign creative direction for a streetwear brand launch.', link: '', cover: '', images: [] },
+    { title: 'NULL SPACE', cat: 'Experience · Digital', year: '2026', desc: 'Immersive digital experience blending sound, motion and interactive design.', link: '', cover: '', images: [] }
+  ],
+  contact: [
+    { label: 'Email', value: 'xiawenhui@example.com', href: 'mailto:xiawenhui@example.com' },
+    { label: 'Phone', value: '+86 138-0000-0000', href: 'tel:+8613800000000' },
+    { label: '小红书', value: '@夏文慧', href: '#' },
+    { label: '站酷', value: 'ZCOOL Portfolio', href: '#' },
+    { label: '微信', value: 'linda_design', href: '#' }
+  ]
+};
+
+const KEY = 'brutalist_portfolio_full';
+let data = JSON.parse(JSON.stringify(DEF));
+let globalEdit = false;
+let currentPfIdx = -1;
+
+function loadData() {
+  try {
+    const s = localStorage.getItem(KEY);
+    if (s) { const p = JSON.parse(s); data = deepMerge(JSON.parse(JSON.stringify(DEF)), p); }
+  } catch(e) {}
+}
+function saveData() { localStorage.setItem(KEY, JSON.stringify(data)); }
+function deepMerge(base, override) {
+  for (const k in override) {
+    if (override[k] && typeof override[k] === 'object' && !Array.isArray(override[k]) && base[k] && typeof base[k] === 'object') {
+      deepMerge(base[k], override[k]);
+    } else { base[k] = override[k]; }
+  }
+  return base;
+}
+
+// ══════════════════════════════════════
+// ─── TOAST ───
+// ══════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  let t = document.getElementById('editToast');
+  if (!t) { t = document.createElement('div'); t.id = 'editToast'; t.className = 'edit-toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ══════════════════════════════════════
+// ─── RENDER: ABOUT ───
+// ══════════════════════════════════════
+function renderAbout() {
+  document.getElementById('aboutName').textContent = data.about.name;
+  document.getElementById('aboutTitle').textContent = data.about.title;
+  document.getElementById('aboutBio').textContent = data.about.bio;
+  const img = document.getElementById('avatarImg');
+  const ph = document.getElementById('avatarPlaceholder');
+  if (data.about.avatar) { img.src = data.about.avatar; img.style.display = ''; ph.style.display = 'none'; }
+  else { img.style.display = 'none'; ph.style.display = ''; }
+}
+
+// About editable
+['aboutName','aboutTitle','aboutBio'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('dblclick', () => {
+    if (!globalEdit) return;
+    const field = id.replace('about','').toLowerCase();
+    const orig = el.textContent;
+    const isBio = field === 'bio';
+    const input = document.createElement(isBio ? 'textarea' : 'input');
+    input.className = isBio ? 'edit-textarea' : 'edit-inline';
+    input.value = orig;
+    if (!isBio) input.style.fontFamily = id === 'aboutName' ? "'Anton',sans-serif" : '';
+    input.style.fontSize = id === 'aboutName' ? 'clamp(50px,7vw,100px)' : '';
+    el.textContent = ''; el.appendChild(input); input.focus(); input.select();
+    const save = () => {
+      const v = input.value.trim();
+      data.about[field] = v || (field === 'name' ? '夏文慧 Linda' : (field === 'title' ? 'Designer & Creative' : ''));
+      saveData(); renderAbout();
+    };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && !isBio) { e.preventDefault(); input.blur(); } });
+  });
+});
+
+// Avatar upload
+document.getElementById('avatarInput').addEventListener('change', function() {
+  const f = this.files[0]; if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => { data.about.avatar = reader.result; saveData(); renderAbout(); toast('头像已更新'); };
+  reader.readAsDataURL(f);
 });
 
 // ══════════════════════════════════════
-// ─── 作品编辑系统 / WORK EDIT SYSTEM ───
+// ─── RENDER: RESUME ───
 // ══════════════════════════════════════
+function renderResume() {
+  const eduList = document.getElementById('eduList');
+  eduList.innerHTML = data.resume.education.map((e, i) => `
+    <div class="resume-item" data-idx="${i}" data-type="education">
+      <div class="resume-item-title" data-field="school">${esc(e.school)}</div>
+      <div class="resume-item-sub" data-field="degree">${esc(e.degree)}</div>
+      <div class="resume-item-date" data-field="date">${esc(e.date)}</div>
+      <div class="resume-item-desc" data-field="desc">${esc(e.desc)}</div>
+      <button class="btn-del-sm edit-only" data-del="education" data-idx="${i}">删除</button>
+    </div>`).join('');
 
-const STORAGE_KEY = 'brutalist_portfolio_works';
-const DEFAULT_WORKS = [
-  { title: 'OBLIVION BRAND', cat: 'Identity · Print', year: '2024' },
-  { title: 'FRAGMENT DIGITAL', cat: 'Web · Motion', year: '2024' },
-  { title: 'ZERO GALLERY', cat: 'Art Direction', year: '2025' },
-  { title: 'VOID OBJECTS', cat: 'Product · 3D', year: '2025' },
-  { title: 'AXIS FASHION', cat: 'Campaign · Brand', year: '2025' },
-  { title: 'NULL SPACE', cat: 'Experience · Digital', year: '2026' }
-];
+  const expList = document.getElementById('expList');
+  expList.innerHTML = data.resume.experience.map((e, i) => `
+    <div class="resume-item" data-idx="${i}" data-type="experience">
+      <div class="resume-item-title" data-field="company">${esc(e.company)}</div>
+      <div class="resume-item-sub" data-field="role">${esc(e.role)}</div>
+      <div class="resume-item-date" data-field="date">${esc(e.date)}</div>
+      <div class="resume-item-desc" data-field="desc">${esc(e.desc)}</div>
+      <button class="btn-del-sm edit-only" data-del="experience" data-idx="${i}">删除</button>
+    </div>`).join('');
 
-let works = [];
-let editMode = false;
+  const skillList = document.getElementById('skillList');
+  skillList.innerHTML = data.resume.skills.map((s, i) => `
+    <div class="skill-item" data-idx="${i}">
+      <span class="skill-name" data-field="name">${esc(s.name)}</span>
+      <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:${s.level}%"></div></div>
+      <span class="skill-pct skill-pct-static">${s.level}%</span>
+      <span class="skill-input-wrap">
+        <input type="range" class="skill-range" value="${s.level}" min="0" max="100" data-field="level" data-idx="${i}">
+        <input class="skill-pct-input" value="${s.level}" data-field="level" data-idx="${i}">
+      </span>
+      <button class="btn-del-sm edit-only" data-del="skill" data-idx="${i}">删除</button>
+    </div>`).join('');
 
-// 从 localStorage 加载或初始化
-function loadWorks() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        works = parsed;
-        return;
-      }
-    }
-  } catch (e) {}
-  works = JSON.parse(JSON.stringify(DEFAULT_WORKS));
-}
-
-// 保存到 localStorage
-function saveWorks() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(works));
-}
-
-// 显示 toast 提示
-let toastTimer;
-function showToast(msg) {
-  let toast = document.getElementById('editToast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'editToast';
-    toast.className = 'edit-toast';
-    document.body.appendChild(toast);
-  }
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
-// 渲染作品列表
-function renderWorks() {
-  const list = document.getElementById('workList');
-  const countEl = document.getElementById('work-count');
-  if (!list) return;
-
-  const html = works.map((w, i) => {
-    const num = String(i + 1).padStart(3, '0');
-    if (editMode) {
-      return `<div class="work-item editing" data-index="${i}">
-        <div style="display:flex;align-items:center;gap:8px;position:relative;z-index:1">
-          <span style="font-size:11px;opacity:0.3;letter-spacing:0.15em;min-width:40px">${num}</span>
-          <div style="flex:1;display:grid;grid-template-columns:1fr auto 100px;gap:24px;align-items:center">
-            <input class="edit-input" value="${escapeHtml(w.title)}" placeholder="作品名称" data-field="title" data-index="${i}">
-            <input class="edit-input-sm" value="${escapeHtml(w.cat)}" placeholder="分类" data-field="cat" data-index="${i}">
-            <input class="edit-input-year" value="${escapeHtml(w.year)}" placeholder="年份" data-field="year" data-index="${i}">
-          </div>
-          <button class="btn-del" data-del="${i}" title="删除此作品">✕ 删除</button>
-        </div>
-      </div>`;
-    }
-    return `<div class="work-item reveal" style="transition-delay:${i * 0.05}s">
-      <div class="wi-num">${num}</div>
-      <div class="wi-title">${escapeHtml(w.title)}</div>
-      <div class="wi-cat">${escapeHtml(w.cat)}</div>
-      <div class="wi-year">${escapeHtml(w.year)}</div>
-    </div>`;
-  }).join('');
-
-  list.innerHTML = html;
-  if (countEl) countEl.textContent = `${String(works.length).padStart(3, '0')} Projects`;
-
-  // 编辑模式下的输入事件
-  if (editMode) {
-    list.querySelectorAll('.edit-input, .edit-input-sm, .edit-input-year').forEach(inp => {
-      inp.addEventListener('input', () => {
-        const idx = parseInt(inp.dataset.index);
-        const field = inp.dataset.field;
-        if (!isNaN(idx) && works[idx] && field) {
-          works[idx][field] = inp.value;
-          saveWorks();
-        }
-      });
+  // Skill range listeners
+  skillList.querySelectorAll('.skill-range').forEach(r => {
+    r.addEventListener('input', () => {
+      const idx = parseInt(r.dataset.idx);
+      data.resume.skills[idx].level = parseInt(r.value);
+      saveData();
+      renderResume();
     });
-    // 删除按钮
-    list.querySelectorAll('.btn-del').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const idx = parseInt(btn.dataset.del);
-        if (!isNaN(idx) && works[idx]) {
-          const name = works[idx].title || '未命名作品';
-          works.splice(idx, 1);
-          saveWorks();
-          renderWorks();
-          showToast(`已删除：「${name}」`);
-        }
-      });
-    });
-  } else {
-    // 非编辑模式：hover distort + cursor
-    attachWorkHover();
-  }
+  });
 
-  // Re-observe reveal elements
-  document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-    revealObserver.observe(el);
+  // Resume item inline editing
+  document.querySelectorAll('#eduList .resume-item-title, #eduList .resume-item-sub, #eduList .resume-item-date, #eduList .resume-item-desc, #expList .resume-item-title, #expList .resume-item-sub, #expList .resume-item-date, #expList .resume-item-desc').forEach(el => {
+    el.addEventListener('dblclick', function() {
+      if (!globalEdit) return;
+      const item = this.closest('.resume-item');
+      const type = item.dataset.type;
+      const idx = parseInt(item.dataset.idx);
+      const field = this.dataset.field;
+      const orig = this.textContent;
+      const input = document.createElement('input');
+      input.className = 'edit-inline';
+      input.value = orig;
+      this.textContent = ''; this.appendChild(input); input.focus(); input.select();
+      const save = () => {
+        data.resume[type][idx][field] = input.value.trim();
+        saveData(); renderResume();
+      };
+      input.addEventListener('blur', save);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
+    });
+  });
+
+  // Delete buttons
+  document.querySelectorAll('.btn-del-sm').forEach(b => {
+    b.addEventListener('click', function() {
+      const type = this.dataset.del;
+      const idx = parseInt(this.dataset.idx);
+      if (type === 'education') { data.resume.education.splice(idx, 1); }
+      else if (type === 'experience') { data.resume.experience.splice(idx, 1); }
+      else if (type === 'skill') { data.resume.skills.splice(idx, 1); }
+      saveData(); renderResume(); renderEditState();
+      toast('已删除');
+    });
   });
 }
 
-function escapeHtml(str) {
+// Add education
+document.getElementById('btnAddEdu').addEventListener('click', () => {
+  data.resume.education.push({ school: 'New School', degree: 'Degree', date: '202X — 202X', desc: 'Description' });
+  saveData(); renderResume(); renderEditState(); toast('已添加教育经历');
+});
+document.getElementById('btnAddExp').addEventListener('click', () => {
+  data.resume.experience.push({ company: 'New Company', role: 'Role', date: '202X — 202X', desc: 'Description' });
+  saveData(); renderResume(); renderEditState(); toast('已添加工作经历');
+});
+document.getElementById('btnAddSkill').addEventListener('click', () => {
+  data.resume.skills.push({ name: 'New Skill', level: 50 });
+  saveData(); renderResume(); renderEditState(); toast('已添加技能');
+});
+
+// ══════════════════════════════════════
+// ─── RENDER: PORTFOLIO ───
+// ══════════════════════════════════════
+function renderPortfolio() {
+  const grid = document.getElementById('pfGrid');
+  grid.innerHTML = data.portfolio.map((p, i) => {
+    const num = String(i + 1).padStart(3, '0');
+    return `<div class="portfolio-card reveal" data-pfidx="${i}" style="transition-delay:${i * 0.05}s">
+      <div class="pf-card-cover-wrap">
+        ${p.cover ? `<img class="pf-card-cover" src="${p.cover}" alt="">` : `<div class="pf-card-no-cover">${esc(p.title)}</div>`}
+      </div>
+      <div class="pf-card-info">
+        <div class="pf-card-num">${num}</div>
+        <div class="pf-card-title">${esc(p.title)}</div>
+        <div class="pf-card-cat">${esc(p.cat)} — ${esc(p.year)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('pfCount').textContent = `${String(data.portfolio.length).padStart(3, '0')} Projects`;
+
+  // Click to open detail
+  grid.querySelectorAll('.portfolio-card').forEach(card => {
+    card.addEventListener('click', () => openPfDetail(parseInt(card.dataset.pfidx)));
+  });
+
+  reObserve();
+}
+
+// Add portfolio
+document.getElementById('btnAddPf').addEventListener('click', () => {
+  data.portfolio.push({ title: 'NEW PROJECT', cat: 'Category', year: '2026', desc: 'Project description', link: '', cover: '', images: [] });
+  saveData(); renderPortfolio(); renderEditState(); toast('已添加新作品');
+});
+
+// ══════════════════════════════════════
+// ─── PORTFOLIO DETAIL ───
+// ══════════════════════════════════════
+function openPfDetail(idx) {
+  currentPfIdx = idx;
+  const p = data.portfolio[idx];
+  const modal = document.getElementById('pfModal');
+  modal.className = 'port-modal' + (globalEdit ? ' editing-modal' : '');
+
+  document.getElementById('pfModalTitle').textContent = p.title;
+  document.getElementById('pfModalMeta').textContent = `${p.cat} — ${p.year}`;
+  document.getElementById('pfModalDesc').textContent = p.desc;
+  document.getElementById('pfModalLink').href = p.link || '#';
+  document.getElementById('pfModalLink').style.display = p.link ? '' : 'none';
+
+  // Images grid
+  const imgGrid = document.getElementById('pfModalImages');
+  let imgsHtml = p.images.map((img, i) => `
+    <div class="port-modal-img-wrap">
+      <img src="${img}" alt="" data-imgidx="${i}">
+      <button class="set-cover-btn" data-setcover="${i}">设为封面</button>
+    </div>`).join('');
+  if (globalEdit) {
+    imgsHtml += `<div class="port-modal-add-img" id="addPfImg"><span>+</span>上传图片</div>`;
+  }
+  imgGrid.innerHTML = imgsHtml;
+
+  // Image click → lightbox
+  imgGrid.querySelectorAll('.port-modal-img-wrap img').forEach(img => {
+    img.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+  // Set cover
+  imgGrid.querySelectorAll('.set-cover-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const coverIdx = parseInt(btn.dataset.setcover);
+      p.cover = p.images[coverIdx];
+      saveData(); renderPortfolio(); toast('已设为封面');
+    });
+  });
+  // Add image
+  if (globalEdit) {
+    const addBtn = document.getElementById('addPfImg');
+    if (addBtn) {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.multiple = true; fileInput.hidden = true;
+      addBtn.appendChild(fileInput);
+      addBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', function() {
+        Array.from(this.files).forEach(f => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            p.images.push(reader.result);
+            if (!p.cover) p.cover = reader.result;
+            saveData(); renderPortfolio(); openPfDetail(idx);
+            toast('图片已上传');
+          };
+          reader.readAsDataURL(f);
+        });
+      });
+    }
+  }
+
+  // Delete project
+  document.getElementById('pfModalDel').onclick = () => {
+    if (confirm(`确定要删除「${p.title}」吗？`)) {
+      data.portfolio.splice(idx, 1);
+      saveData(); renderPortfolio(); closePfModal(); toast('作品已删除');
+    }
+  };
+
+  document.getElementById('pfModalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePfModal() {
+  document.getElementById('pfModalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentPfIdx = -1;
+}
+
+document.getElementById('pfModalClose').addEventListener('click', closePfModal);
+document.getElementById('pfModalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('pfModalOverlay')) closePfModal();
+});
+
+// Detail inline editing (double-click)
+['pfModalTitle','pfModalMeta','pfModalDesc'].forEach(id => {
+  document.getElementById(id).addEventListener('dblclick', function() {
+    if (!globalEdit || currentPfIdx < 0) return;
+    const p = data.portfolio[currentPfIdx];
+    const fieldMap = { pfModalTitle: 'title', pfModalMeta: null, pfModalDesc: 'desc' };
+    const field = fieldMap[id];
+    if (!field) return;
+    const orig = p[field];
+    const input = document.createElement('input');
+    input.className = 'edit-inline'; input.style.color = '#fff';
+    input.value = orig;
+    this.textContent = ''; this.appendChild(input); input.focus(); input.select();
+    const save = () => { p[field] = input.value.trim() || orig; saveData(); renderPortfolio(); openPfDetail(currentPfIdx); };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
+  });
+});
+
+// ══════════════════════════════════════
+// ─── LIGHTBOX ───
+// ══════════════════════════════════════
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+
+// ══════════════════════════════════════
+// ─── RENDER: CONTACT ───
+// ══════════════════════════════════════
+function renderContact() {
+  const links = document.getElementById('contactLinks');
+  links.innerHTML = data.contact.map((c, i) => `
+    <div class="contact-item">
+      <span class="contact-item-label">${esc(c.label)}</span>
+      <a class="contact-item-value" href="${esc(c.href)}" target="${c.href.startsWith('mailto') || c.href.startsWith('tel') ? '_self' : '_blank'}">${esc(c.value)}</a>
+      ${globalEdit ? `<button class="btn-del-sm" data-del="contact" data-idx="${i}">删除</button>` : ''}
+    </div>`).join('');
+
+  // Inline edit
+  links.querySelectorAll('.contact-item-value').forEach((el, i) => {
+    el.addEventListener('dblclick', function(e) {
+      if (!globalEdit) return;
+      e.preventDefault();
+      const orig = this.textContent;
+      const input = document.createElement('input');
+      input.className = 'edit-inline'; input.style.color = '#fff'; input.style.fontSize = '13px';
+      input.value = orig;
+      this.textContent = ''; this.appendChild(input); input.focus(); input.select();
+      const save = () => {
+        data.contact[i].value = input.value.trim() || orig;
+        if (data.contact[i].label === 'Email') data.contact[i].href = 'mailto:' + data.contact[i].value;
+        if (data.contact[i].label === 'Phone') data.contact[i].href = 'tel:' + data.contact[i].value;
+        saveData(); renderContact();
+      };
+      input.addEventListener('blur', save);
+      input.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); } });
+    });
+  });
+
+  // Delete
+  links.querySelectorAll('.btn-del-sm').forEach(b => {
+    b.addEventListener('click', function() {
+      const idx = parseInt(this.dataset.idx);
+      data.contact.splice(idx, 1);
+      saveData(); renderContact(); toast('已删除');
+    });
+  });
+}
+
+// ══════════════════════════════════════
+// ─── GLOBAL EDIT MODE ───
+// ══════════════════════════════════════
+function renderEditState() {
+  const sections = document.querySelectorAll('.editable-section');
+  sections.forEach(s => {
+    if (globalEdit) s.classList.add('editing-section');
+    else s.classList.remove('editing-section');
+  });
+  // Show/hide edit-only elements
+  document.querySelectorAll('.edit-only').forEach(el => {
+    el.style.display = globalEdit ? '' : 'none';
+  });
+  // Portfolio detail
+  const modal = document.getElementById('pfModal');
+  if (modal) modal.className = 'port-modal' + (globalEdit ? ' editing-modal' : '');
+  // Refresh contact for delete buttons
+  if (globalEdit || !globalEdit) renderContact();
+  // Resume for delete buttons
+  renderResume();
+  renderAbout();
+}
+
+document.getElementById('btnGlobalEdit').addEventListener('click', () => {
+  globalEdit = !globalEdit;
+  const btn = document.getElementById('btnGlobalEdit');
+  const pdfBtn = document.getElementById('btnPdf');
+  if (globalEdit) {
+    btn.textContent = '✓ 退出编辑';
+    btn.classList.add('active');
+    pdfBtn.style.display = '';
+    toast('编辑模式已开启 — 可修改所有内容并实时保存');
+  } else {
+    btn.textContent = '✎ 编辑模式';
+    btn.classList.remove('active');
+    pdfBtn.style.display = 'none';
+    toast('已退出编辑，所有修改已保存 ✓');
+  }
+  renderEditState();
+  renderPortfolio();
+  if (currentPfIdx >= 0) openPfDetail(currentPfIdx);
+});
+
+// ══════════════════════════════════════
+// ─── PDF EXPORT ───
+// ══════════════════════════════════════
+document.getElementById('btnPdf').addEventListener('click', () => {
+  toast('提示：请使用浏览器打印功能（Ctrl+P / Cmd+P），选择「另存为PDF」即可导出简历。建议在打印设置中取消页眉页脚。');
+  setTimeout(() => window.print(), 500);
+});
+
+// ══════════════════════════════════════
+// ─── UTILS ───
+// ══════════════════════════════════════
+function esc(s) {
   const d = document.createElement('div');
-  d.textContent = str;
+  d.textContent = s || '';
   return d.innerHTML;
 }
 
-function attachWorkHover() {
-  document.querySelectorAll('.work-item:not(.editing)').forEach(item => {
-    const title = item.querySelector('.wi-title');
-    if (!title) return;
-    // remove old listeners by cloning
-    const clone = title.cloneNode(true);
-    title.parentNode.replaceChild(clone, title);
-    const newTitle = item.querySelector('.wi-title');
-    item.addEventListener('mouseenter', () => {
-      newTitle.style.transform = 'skewX(-6deg) scaleX(1.03)';
-      newTitle.style.transition = 'transform 0.2s ease';
-    });
-    item.addEventListener('mouseleave', () => {
-      newTitle.style.transform = '';
-    });
-  });
-}
-
-// 编辑模式切换
-document.getElementById('editToggle').addEventListener('click', () => {
-  editMode = !editMode;
-  const btn = document.getElementById('editToggle');
-  const addBtn = document.getElementById('btnAddWork');
-  const guidance = document.getElementById('editGuidance');
-
-  if (editMode) {
-    btn.textContent = '✓ 保存完成';
-    btn.classList.add('active');
-    btn.title = '点击退出编辑模式';
-    addBtn.style.display = 'block';
-    guidance.style.display = 'block';
-    showToast('编辑模式已开启，可直接修改作品信息');
-  } else {
-    btn.textContent = '✎ 编辑作品';
-    btn.classList.remove('active');
-    btn.title = '点击进入编辑模式，可添加/修改/删除作品';
-    addBtn.style.display = 'none';
-    guidance.style.display = 'none';
-    showToast('作品已保存 ✓');
-  }
-  renderWorks();
-});
-
-// 添加作品按钮
-document.getElementById('btnAddWork').addEventListener('click', () => {
-  works.push({ title: 'NEW PROJECT', cat: 'Category', year: '2026' });
-  saveWorks();
-  renderWorks();
-  showToast('已添加新作品，请修改名称和分类');
-
-  // 聚焦到新添加的作品标题输入框
-  setTimeout(() => {
-    const lastInput = document.querySelector('#workList .edit-input:last-of-type');
-    if (lastInput) { lastInput.focus(); lastInput.select(); }
-  }, 100);
-});
-
-// ─── 初始化 ───
-loadWorks();
-renderWorks();
+// ══════════════════════════════════════
+// ─── INIT ───
+// ══════════════════════════════════════
+loadData();
+renderAbout();
+renderResume();
+renderPortfolio();
+renderContact();
+renderEditState();
 </script>
 </body>
 </html>
