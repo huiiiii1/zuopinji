@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夏文慧 · 个人作品集</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Bebas+Neue&family=Anton&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+.cursor {
+  position: fixed;
+  width: 20px; height: 20px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+.cursor.expand {
+  width: 60px; height: 60px;
+  background: var(--white);
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 40px;
+  mix-blend-mode: difference;
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; letter-spacing: 0.15em;
+  color: var(--white);
+  text-decoration: none;
+}
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+.nav-links a {
+  color: var(--white); text-decoration: none;
+  font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 0.4; }
+
+/* ─── HERO ─── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 0 40px;
+}
+
+.hero-noise {
+  position: absolute; inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+}
+
+.hero-number {
+  position: absolute; top: 80px; right: 40px;
+  font-size: 11px; letter-spacing: 0.3em;
+  opacity: 0.3;
+  writing-mode: vertical-rl;
+}
+
+.hero-line1 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(80px, 13vw, 200px);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  will-change: transform;
+}
+.hero-line2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(40px, 6vw, 90px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--white);
+  margin-left: clamp(40px, 12vw, 220px);
+  will-change: transform;
+}
+.hero-line3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px, 18vw, 280px);
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  margin-top: -10px;
+  will-change: transform;
+}
+.hero-sub {
+  font-size: 12px; letter-spacing: 0.25em;
+  text-transform: uppercase; opacity: 0.5;
+  margin-top: 40px; margin-left: 4px;
+}
+
+.hero-marquee-wrap {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding: 14px 0;
+  background: var(--black);
+}
+.hero-marquee {
+  display: flex; gap: 0;
+  animation: marquee 18s linear infinite;
+  white-space: nowrap;
+}
+.hero-marquee span {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px; letter-spacing: 0.3em;
+  padding: 0 40px; opacity: 0.3;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ─── DISTORT TEXT ─── */
+.distort-text {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  will-change: transform;
+}
+
+/* ─── SECTION: MANIFESTO ─── */
+#manifesto {
+  min-height: 100vh;
+  background: var(--white);
+  color: var(--black);
+  display: flex; align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 40px;
+}
+.manifesto-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  position: relative;
+}
+.manifesto-tag {
+  font-size: 10px; letter-spacing: 0.4em;
+  text-transform: uppercase; opacity: 0.4;
+  margin-bottom: 40px;
+}
+.manifesto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.m-word-big {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(60px, 10vw, 160px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--black);
+  will-change: transform;
+}
+.m-word-big.outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--black);
+}
+.m-word-big.rotated {
+  transform: rotate(-8deg);
+  display: inline-block;
+  margin-top: 20px;
+}
+.m-word-big.skew {
+  transform: skewX(-10deg);
+  display: inline-block;
+}
+.manifesto-text {
+  font-size: 16px; line-height: 1.9;
+  opacity: 0.65; max-width: 400px;
+  align-self: end; padding-bottom: 10px;
+}
+.manifesto-num {
+  position: absolute; right: 0; top: -40px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(120px, 18vw, 260px);
+  opacity: 0.05;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ─── SECTION: WORK ─── */
+#work {
+  background: var(--black);
+  padding: 80px 40px 120px;
+  position: relative;
+}
+.work-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 60px;
+}
+.work-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(60px, 10vw, 140px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.work-count {
+  font-size: 11px; letter-spacing: 0.3em;
+  opacity: 0.3; text-transform: uppercase;
+  padding-bottom: 16px;
+}
+
+.work-list { display: flex; flex-direction: column; gap: 0; }
+.work-item {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 28px 0;
+  display: grid;
+  grid-template-columns: 60px 1fr auto 120px;
+  align-items: center; gap: 40px;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.work-item::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--white);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
+  z-index: 0;
+}
+.work-item:hover::after { transform: scaleX(1); }
+.work-item:hover .wi-num,
+.work-item:hover .wi-title,
+.work-item:hover .wi-cat,
+.work-item:hover .wi-year { color: var(--black); }
+.wi-num {
+  font-size: 11px; opacity: 0.3; letter-spacing: 0.2em;
+  position: relative; z-index: 1;
+  transition: color 0.2s;
+}
+.wi-title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(28px, 4vw, 52px);
+  letter-spacing: -0.02em;
+  position: relative; z-index: 1;
+  transition: color 0.2s;
+}
+.wi-cat {
+  font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; opacity: 0.4;
+  position: relative; z-index: 1;
+  transition: color 0.2s;
+}
+.wi-year {
+  text-align: right;
+  font-size: 11px; opacity: 0.3;
+  position: relative; z-index: 1;
+  transition: color 0.2s;
+}
+.work-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+/* ─── SECTION: CHAOS GRID ─── */
+#chaos {
+  background: var(--black);
+  padding: 0 40px 120px;
+  position: relative;
+}
+.chaos-label {
+  font-size: 10px; letter-spacing: 0.4em;
+  text-transform: uppercase; opacity: 0.3;
+  margin-bottom: 60px; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.chaos-container {
+  position: relative;
+  min-height: 700px;
+}
+/* Floating text elements — brutalist chaos layout */
+.chaos-el {
+  position: absolute;
+  font-family: 'Anton', sans-serif;
+  color: var(--white);
+  pointer-events: none;
+  will-change: transform;
+}
+.ce-1 { font-size: clamp(70px, 11vw, 160px); top: 0; left: 0; opacity: 1; letter-spacing: -0.04em; }
+.ce-2 { font-size: clamp(16px, 2vw, 30px); top: 60px; left: 42%; color: transparent; -webkit-text-stroke: 1px #fff; font-family: 'Space Grotesk'; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.6; }
+.ce-3 { font-size: clamp(50px, 8vw, 120px); bottom: 80px; right: 0; opacity: 0.06; letter-spacing: -0.05em; }
+.ce-4 { font-size: clamp(12px, 1.5vw, 18px); top: 38%; left: 20%; writing-mode: vertical-rl; letter-spacing: 0.3em; font-family: 'Space Grotesk'; opacity: 0.25; font-size: 11px; text-transform: uppercase; }
+.ce-5 { font-size: clamp(80px, 14vw, 200px); top: 30%; left: 30%; opacity: 0.03; z-index: 0; }
+.ce-6 { font-size: clamp(60px, 9vw, 140px); bottom: 0; left: 15%; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.4); }
+.ce-7 { font-size: 11px; letter-spacing: 0.3em; top: 50%; right: 5%; font-family: 'Space Grotesk'; opacity: 0.3; text-transform: uppercase; }
+.chaos-line {
+  position: absolute;
+  background: rgba(255,255,255,0.08);
+}
+.cl-1 { width: 1px; height: 300px; top: 0; left: 50%; }
+.cl-2 { height: 1px; width: 40%; top: 45%; left: 5%; }
+.chaos-dot {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--white);
+}
+.cd-1 { top: 120px; left: 55%; }
+.cd-2 { top: 40%; right: 20%; opacity: 0.4; }
+
+/* ─── SECTION: PROCESS ─── */
+#process {
+  background: var(--white);
+  color: var(--black);
+  padding: 100px 40px;
+}
+.process-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 80px;
+}
+.process-title-wrap {}
+.p-big {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(60px, 9vw, 130px);
+  line-height: 0.9; letter-spacing: -0.04em;
+}
+.p-big-outline {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(60px, 9vw, 130px);
+  line-height: 0.9; letter-spacing: -0.04em;
+  color: transparent; -webkit-text-stroke: 1.5px var(--black);
+}
+.process-desc {
+  max-width: 280px; padding-top: 20px;
+  font-size: 14px; line-height: 1.8; opacity: 0.6;
+}
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.process-step {
+  border-left: 1px solid rgba(0,0,0,0.1);
+  padding: 30px 24px;
+  position: relative;
+}
+.ps-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px; line-height: 1;
+  opacity: 0.08; margin-bottom: 12px;
+}
+.ps-title {
+  font-size: 15px; font-weight: 700;
+  letter-spacing: 0.05em; margin-bottom: 10px;
+}
+.ps-desc { font-size: 13px; opacity: 0.5; line-height: 1.7; }
+
+/* ─── SECTION: MARQUEE MIDDLE ─── */
+.mid-marquee {
+  background: var(--white);
+  border-top: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  overflow: hidden; padding: 18px 0;
+}
+.mid-marquee .hero-marquee { animation-duration: 22s; }
+.mid-marquee .hero-marquee span {
+  color: var(--black); opacity: 0.15;
+  font-size: 11px;
+}
+
+/* ─── SECTION: CONTACT ─── */
+#contact {
+  background: var(--black);
+  padding: 120px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.contact-bg-text {
+  position: absolute;
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(80px, 14vw, 220px);
+  opacity: 0.04; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap; pointer-events: none;
+  letter-spacing: -0.04em;
+}
+.contact-inner {
+  max-width: 1000px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.contact-label {
+  font-size: 11px; letter-spacing: 0.4em;
+  text-transform: uppercase; opacity: 0.3;
+  margin-bottom: 40px;
+}
+.contact-cta {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(50px, 8vw, 120px);
+  line-height: 0.9; letter-spacing: -0.03em;
+  margin-bottom: 60px;
+}
+.contact-cta span {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--white);
+}
+.contact-links {
+  display: flex; gap: 40px; flex-wrap: wrap;
+}
+.contact-link {
+  font-size: 13px; letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 4px;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+.contact-link:hover { border-color: var(--white); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 24px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy {
+  font-size: 11px; opacity: 0.2; letter-spacing: 0.15em;
+}
+
+/* ─── SCROLL ANIMATION BASE ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ─── GLITCH ─── */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute; left: 0; top: 0;
+  width: 100%; height: 100%;
+  font-family: inherit; font-size: inherit;
+  font-weight: inherit; line-height: inherit;
+  letter-spacing: inherit;
+}
+.glitch::before {
+  color: var(--white);
+  animation: glitch1 3.5s infinite;
+  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+}
+.glitch::after {
+  color: var(--white);
+  animation: glitch2 3.5s infinite;
+  clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+}
+@keyframes glitch1 {
+  0%,89%,100% { transform: none; opacity: 0; }
+  90% { transform: translate(-3px, 1px) skewX(4deg); opacity: 0.8; }
+  92% { transform: translate(3px, -1px); opacity: 0.8; }
+  94% { transform: none; opacity: 0; }
+  96% { transform: translate(-5px, 2px); opacity: 0.8; }
+  98% { transform: none; opacity: 0; }
+}
+@keyframes glitch2 {
+  0%,87%,100% { transform: none; opacity: 0; }
+  88% { transform: translate(4px, -2px) skewX(-3deg); opacity: 0.7; }
+  90% { transform: translate(-2px, 1px); opacity: 0.7; }
+  92% { transform: none; opacity: 0; }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  #hero, #manifesto, #work, #chaos, #process, #contact { padding-left: 20px; padding-right: 20px; }
+  .manifesto-grid { grid-template-columns: 1fr; }
+  .work-item { grid-template-columns: 40px 1fr; gap: 16px; }
+  .wi-cat, .wi-year { display: none; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .contact-links { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">夏文慧</a>
+  <ul class="nav-links">
+    <li><a href="#work">作品</a></li>
+    <li><a href="#process">关于</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-number">个人作品集</div>
+
+  <div class="hero-line1 distort-text" id="hl1">
+    <span class="glitch" data-text="XIA">XIA</span>
+  </div>
+  <div class="hero-line2 distort-text" id="hl2">WENHUI</div>
+  <div class="hero-line3 distort-text" id="hl3">PORTFOLIO.</div>
+
+  <div class="hero-sub reveal">设计师 · 创意作品集 · 夏文慧</div>
+
+  <div class="hero-marquee-wrap">
+    <div class="hero-marquee">
+      <span>平面设计</span><span>·</span>
+      <span>品牌策划</span><span>·</span>
+      <span>UI设计</span><span>·</span>
+      <span>插画</span><span>·</span>
+      <span>摄影</span><span>·</span>
+      <span>文创</span><span>·</span>
+      <span>平面设计</span><span>·</span>
+      <span>品牌策划</span><span>·</span>
+      <span>UI设计</span><span>·</span>
+      <span>插画</span><span>·</span>
+      <span>摄影</span><span>·</span>
+      <span>文创</span><span>·</span>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div class="manifesto-inner">
+    <div class="manifesto-tag reveal">— 关于我 / 01</div>
+    <div class="manifesto-num">01</div>
+    <div class="manifesto-grid">
+      <div>
+        <div class="m-word-big reveal">创意</div>
+        <div class="m-word-big outline reveal" style="transition-delay:0.1s">是</div>
+        <div class="m-word-big rotated reveal" style="transition-delay:0.2s">本能.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:12px">
+        <p class="manifesto-text reveal" style="transition-delay:0.25s">
+          你好，我是夏文慧。<br><br>
+          热爱设计，擅长将想法转化为视觉语言。
+          不拘泥于规则，追求独特的表达方式。
+        </p>
+        <div style="margin-top:40px" class="reveal" style="transition-delay:0.3s">
+          <div class="m-word-big skew" style="font-size:clamp(40px,6vw,80px)">探索</div>
+          <div style="font-size:11px;letter-spacing:0.3em;opacity:0.3;margin-top:6px;text-transform:uppercase">永无止境</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="work-header">
+    <div class="work-title reveal">作品<br>精选</div>
+    <div class="work-count reveal">006 作品</div>
+  </div>
+
+  <div class="work-list">
+    <div class="work-item reveal">
+      <div class="wi-num">001</div>
+      <div class="wi-title">品牌视觉设计</div>
+      <div class="wi-cat">品牌 · VI</div>
+      <div class="wi-year">2024</div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.05s">
+      <div class="wi-num">002</div>
+      <div class="wi-title">UI界面设计</div>
+      <div class="wi-cat">App · Web</div>
+      <div class="wi-year">2024</div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.1s">
+      <div class="wi-num">003</div>
+      <div class="wi-title">插画系列</div>
+      <div class="wi-cat">艺术 · 插画</div>
+      <div class="wi-year">2025</div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.15s">
+      <div class="wi-num">004</div>
+      <div class="wi-title">文创产品</div>
+      <div class="wi-cat">产品 · 文创</div>
+      <div class="wi-year">2025</div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.2s">
+      <div class="wi-num">005</div>
+      <div class="wi-title">摄影作品</div>
+      <div class="wi-cat">摄影 · 人文</div>
+      <div class="wi-year">2025</div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.25s">
+      <div class="wi-num">006</div>
+      <div class="wi-title">动态海报</div>
+      <div class="wi-cat">动态 · 数字</div>
+      <div class="wi-year">2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAOS GRID -->
+<section id="chaos">
+  <div class="chaos-label">— 视觉探索 / 02</div>
+  <div class="chaos-container">
+    <div class="chaos-line cl-1"></div>
+    <div class="chaos-line cl-2"></div>
+    <div class="chaos-dot cd-1"></div>
+    <div class="chaos-dot cd-2"></div>
+    <div class="chaos-el ce-1" id="ce1">创造</div>
+    <div class="chaos-el ce-2">无限可能</div>
+    <div class="chaos-el ce-3">设计</div>
+    <div class="chaos-el ce-4">夏文慧 · 作品集 · 2026</div>
+    <div class="chaos-el ce-5">∞</div>
+    <div class="chaos-el ce-6" id="ce6">热爱</div>
+    <div class="chaos-el ce-7">视觉设计 / 创意 / 永不止步</div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="process-top reveal">
+    <div class="process-title-wrap">
+      <div class="p-big">我的</div>
+      <div class="p-big-outline">设计</div>
+      <div class="p-big">哲学.</div>
+    </div>
+    <p class="process-desc">
+      四个关键词，诠释我的创作理念。不设边界，持续突破。
+    </p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="ps-num">01</div>
+      <div class="ps-title">洞察需求</div>
+      <div class="ps-desc">深入理解每个项目背后的核心诉求，找到最本质的表达方式。</div>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.1s">
+      <div class="ps-num">02</div>
+      <div class="ps-title">大胆尝试</div>
+      <div class="ps-desc">不满足于常规方案，敢于打破边界寻找新的视觉语言。</div>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.2s">
+      <div class="ps-num">03</div>
+      <div class="ps-title">精心打磨</div>
+      <div class="ps-desc">每个像素、每条曲线都经过反复推敲，直到完美。</div>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.3s">
+      <div class="ps-num">04</div>
+      <div class="ps-title">交付结果</div>
+      <div class="ps-desc">创意最终要落地。确保每个作品都经得起审视。</div>
+    </div>
+  </div>
+</section>
+
+<!-- MID MARQUEE -->
+<div class="mid-marquee">
+  <div class="hero-marquee">
+    <span>创意</span><span>·</span>
+    <span>设计</span><span>·</span>
+    <span>探索</span><span>·</span>
+    <span>热爱</span><span>·</span>
+    <span>创意</span><span>·</span>
+    <span>设计</span><span>·</span>
+    <span>探索</span><span>·</span>
+    <span>热爱</span><span>·</span>
+    <span>创意</span><span>·</span>
+    <span>设计</span><span>·</span>
+    <span>探索</span><span>·</span>
+    <span>热爱</span><span>·</span>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-bg-text">文慧</div>
+  <div class="contact-inner">
+    <div class="contact-label reveal">— 联系我 / 03</div>
+    <div class="contact-cta reveal">
+      有<span>项目</span>合作？<br>期待与您<br>一起<span>创造.</span>
+    </div>
+    <div class="contact-links reveal">
+      <a class="contact-link" href="mailto:xiawenhui@example.com">xiawenhui@example.com</a>
+      <a class="contact-link" href="#">小红书</a>
+      <a class="contact-link" href="#">站酷</a>
+      <a class="contact-link" href="#">微信</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 夏文慧 — 保留所有权利</div>
+  <div class="footer-copy">用设计表达自我</div>
+</footer>
+
+<script>
+// ─── CURSOR ───
+const cursor = document.getElementById('cursor');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+document.querySelectorAll('a, button, .work-item, .process-step').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+});
+
+// ─── SCROLL REVEAL ───
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObserver.observe(el));
+
+// ─── HERO PARALLAX + DISTORT on scroll ───
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+let scrollY = 0;
+window.addEventListener('scroll', () => {
+  scrollY = window.scrollY;
+  applyDistort();
+  applyParallax();
+  applyChaosParallax();
+});
+
+function applyDistort() {
+  const progress = Math.min(scrollY / window.innerHeight, 1);
+  const hl1 = document.getElementById('hl1');
+  const hl2 = document.getElementById('hl2');
+  const hl3 = document.getElementById('hl3');
+
+  // Skew + scale distortion on scroll
+  const skewVal = progress * 12;
+  const scaleX = 1 + progress * 0.18;
+  const scaleY = 1 - progress * 0.08;
+
+  hl1.style.transform = `translateY(${progress * -60}px) skewX(${-skewVal * 0.5}deg) scaleX(${scaleX})`;
+  hl2.style.transform = `translateY(${progress * -30}px) skewX(${skewVal}deg) translateX(${progress * 40}px)`;
+  hl3.style.transform = `translateY(${progress * -10}px) scaleX(${1 - progress * 0.06}) scaleY(${scaleY})`;
+
+  // Opacity fade
+  hl1.style.opacity = 1 - progress * 0.6;
+  hl2.style.opacity = 1 - progress * 0.8;
+  hl3.style.opacity = 1 - progress * 0.5;
+}
+
+function applyParallax() {
+  // Manifesto words
+  const mWords = document.querySelectorAll('.m-word-big');
+  mWords.forEach((el, i) => {
+    const rect = el.getBoundingClientRect();
+    const center = rect.top + rect.height / 2 - window.innerHeight / 2;
+    const shift = center * 0.04 * (i % 2 === 0 ? 1 : -1);
+    el.style.transform = el.classList.contains('rotated')
+      ? `rotate(-8deg) translateX(${shift}px)`
+      : el.classList.contains('skew')
+        ? `skewX(-10deg) translateX(${shift}px)`
+        : `translateX(${shift}px)`;
+  });
+}
+
+function applyChaosParallax() {
+  const ce1 = document.getElementById('ce1');
+  const ce6 = document.getElementById('ce6');
+  const section = document.getElementById('chaos');
+  if (!section) return;
+  const rect = section.getBoundingClientRect();
+  const progress = -rect.top / window.innerHeight;
+  if (ce1) ce1.style.transform = `translateY(${progress * 40}px)`;
+  if (ce6) ce6.style.transform = `translateY(${progress * -30}px) translateX(${progress * 20}px)`;
+}
+
+// ─── WORK ITEM HOVER – text distort ───
+document.querySelectorAll('.work-item').forEach(item => {
+  const title = item.querySelector('.wi-title');
+  item.addEventListener('mouseenter', () => {
+    title.style.transform = `skewX(-6deg) scaleX(1.03)`;
+    title.style.transition = 'transform 0.2s ease';
+  });
+  item.addEventListener('mouseleave', () => {
+    title.style.transform = '';
+  });
+});
+
+// ─── GLITCH RANDOM TRIGGER ───
+setInterval(() => {
+  const glitch = document.querySelector('.glitch');
+  if (!glitch) return;
+  glitch.style.animation = 'none';
+  glitch.offsetHeight; // reflow
+  glitch.style.animation = '';
+}, 6000);
+
+// ─── MOUSE-FOLLOW subtle tilt on hero ───
+document.getElementById('hero').addEventListener('mousemove', e => {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const dx = (e.clientX - cx) / cx;
+  const dy = (e.clientY - cy) / cy;
+  document.getElementById('hl1').style.letterSpacing = `${-0.03 + dx * 0.02}em`;
+  document.getElementById('hl3').style.letterSpacing = `${-0.04 - dx * 0.01}em`;
+});
+</script>
+</body>
+</html>
