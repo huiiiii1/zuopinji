@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夏文慧 Linda · Portfolio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Bebas+Neue&family=Anton&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { --black: #000000; --white: #FFFFFF; --gray: #1a1a1a; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+.cursor { position:fixed; width:20px; height:20px; border:2px solid var(--white); border-radius:50%; pointer-events:none; z-index:99999; transform:translate(-50%,-50%); transition:transform .08s,width .2s,height .2s,background .2s; mix-blend-mode:difference; }
+.cursor.expand { width:60px; height:60px; background:var(--white); }
+
+/* ─── GLOBAL EDIT TOGGLE ─── */
+.global-edit-bar { position:fixed; bottom:24px; right:40px; z-index:9998; display:flex; gap:12px; }
+.btn-global-edit, .btn-global-save {
+  font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.15em;
+  text-transform:uppercase; background:var(--white); color:var(--black);
+  border:2px solid var(--black); padding:10px 20px; cursor:pointer;
+  transition:all .2s;
+}
+.btn-global-edit:hover, .btn-global-save:hover { background:var(--black); color:var(--white); border-color:var(--white); }
+.btn-global-edit.active { background:var(--black); color:var(--white); border-color:var(--white); }
+
+/* ─── NAV ─── */
+nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:20px 40px; mix-blend-mode:difference; }
+.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.15em; color:var(--white); text-decoration:none; }
+.nav-links { display:flex; gap:28px; align-items:center; list-style:none; }
+.nav-links a { color:var(--white); text-decoration:none; font-size:11px; letter-spacing:.2em; text-transform:uppercase; transition:opacity .2s; }
+.nav-links a:hover { opacity:.4; }
+.btn-pdf-nav { font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:.15em; text-transform:uppercase; background:var(--white); color:var(--black); border:1px solid var(--white); padding:6px 14px; cursor:pointer; transition:all .2s; }
+.btn-pdf-nav:hover { background:transparent; color:var(--white); }
+
+/* ─── HERO ─── */
+#hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; padding:0 40px; }
+.hero-noise { position:absolute; inset:0; opacity:.04; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size:256px 256px; pointer-events:none; }
+.hero-number { position:absolute; top:80px; right:40px; font-size:11px; letter-spacing:.3em; opacity:.3; writing-mode:vertical-rl; }
+.hero-line1 { font-family:'Anton',sans-serif; font-size:clamp(80px,13vw,200px); line-height:.88; letter-spacing:-.03em; color:var(--white); will-change:transform; }
+.hero-line2 { font-family:'Anton',sans-serif; font-size:clamp(40px,6vw,90px); line-height:1; letter-spacing:-.02em; color:transparent; -webkit-text-stroke:1.5px var(--white); margin-left:clamp(40px,12vw,220px); will-change:transform; }
+.hero-line3 { font-family:'Bebas Neue',sans-serif; font-size:clamp(100px,18vw,280px); line-height:.82; letter-spacing:-.04em; color:var(--white); margin-top:-10px; will-change:transform; }
+.hero-sub { font-size:12px; letter-spacing:.25em; text-transform:uppercase; opacity:.5; margin-top:40px; margin-left:4px; }
+.hero-marquee-wrap { position:absolute; bottom:0; left:0; right:0; overflow:hidden; border-top:1px solid rgba(255,255,255,.12); padding:14px 0; background:var(--black); }
+.hero-marquee { display:flex; gap:0; animation:marquee 18s linear infinite; white-space:nowrap; }
+.hero-marquee span { font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:.3em; padding:0 40px; opacity:.3; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.distort-text { display:inline-block; transition:transform .15s; will-change:transform; }
+
+/* ─── SECTION: ABOUT (was Manifesto) ─── */
+#about { min-height:100vh; background:var(--white); color:var(--black); display:flex; align-items:center; position:relative; overflow:hidden; padding:80px 40px; }
+.about-inner { max-width:1200px; margin:0 auto; width:100%; position:relative; }
+.about-tag { font-size:10px; letter-spacing:.4em; text-transform:uppercase; opacity:.4; margin-bottom:24px; }
+.about-grid { display:grid; grid-template-columns:250px 1fr; gap:60px; align-items:start; }
+.about-avatar-wrap { position:relative; }
+.about-avatar { width:200px; height:200px; border-radius:50%; background:var(--black); display:flex; align-items:center; justify-content:center; font-family:'Anton',sans-serif; font-size:80px; color:var(--white); overflow:hidden; border:3px solid var(--black); }
+.about-avatar img { width:100%; height:100%; object-fit:cover; }
+.about-avatar-placeholder { opacity:.3; }
+.about-name { font-family:'Anton',sans-serif; font-size:clamp(50px,7vw,100px); line-height:.9; letter-spacing:-.04em; margin-bottom:8px; }
+.about-title-sm { font-size:13px; letter-spacing:.2em; text-transform:uppercase; opacity:.4; margin-bottom:24px; }
+.about-bio { font-size:15px; line-height:1.9; opacity:.6; max-width:500px; }
+.about-upload { margin-top:16px; font-size:10px; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; opacity:.3; border-bottom:1px dashed rgba(0,0,0,.3); display:inline-block; transition:opacity .2s; }
+.about-upload:hover { opacity:.7; }
+.about-num { position:absolute; right:0; top:-40px; font-family:'Bebas Neue',sans-serif; font-size:clamp(120px,18vw,260px); opacity:.05; line-height:1; pointer-events:none; }
+
+/* ─── SECTION: RESUME ─── */
+#resume { background:var(--black); padding:100px 40px; }
+.resume-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:60px; }
+.resume-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,10vw,140px); line-height:1; letter-spacing:-.02em; }
+.resume-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; }
+.resume-col-title { font-family:'Anton',sans-serif; font-size:14px; letter-spacing:.3em; text-transform:uppercase; opacity:.3; margin-bottom:32px; border-bottom:1px solid rgba(255,255,255,.1); padding-bottom:12px; }
+.resume-item { margin-bottom:28px; position:relative; padding-left:0; }
+.resume-item-title { font-weight:700; font-size:16px; letter-spacing:.05em; margin-bottom:4px; }
+.resume-item-sub { font-size:12px; opacity:.4; letter-spacing:.1em; text-transform:uppercase; margin-bottom:2px; }
+.resume-item-date { font-size:11px; opacity:.25; letter-spacing:.15em; margin-bottom:8px; }
+.resume-item-desc { font-size:13px; opacity:.5; line-height:1.7; }
+
+/* ─── SKILL BARS ─── */
+.skills-section { grid-column:1 / -1; margin-top:40px; }
+.skill-item { display:grid; grid-template-columns:160px 1fr 50px; align-items:center; gap:20px; margin-bottom:16px; }
+.skill-name { font-size:12px; letter-spacing:.15em; text-transform:uppercase; opacity:.6; }
+.skill-bar-wrap { height:4px; background:rgba(255,255,255,.08); position:relative; }
+.skill-bar-fill { height:100%; background:var(--white); transition:width .4s; }
+.skill-pct { font-size:11px; opacity:.3; letter-spacing:.05em; text-align:right; }
+.skill-input-wrap { display:none; }
+.editing .skill-input-wrap { display:flex; gap:8px; align-items:center; }
+.editing .skill-pct-static { display:none; }
+.skill-range { -webkit-appearance:none; width:100%; height:4px; background:rgba(255,255,255,.2); outline:none; cursor:pointer; }
+.skill-range::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; background:var(--white); cursor:pointer; }
+.skill-pct-input { font-family:'Space Grotesk',sans-serif; font-size:11px; width:40px; text-align:right; background:transparent; border:none; border-bottom:1px dashed rgba(255,255,255,.3); color:var(--white); outline:none; }
+
+/* ─── SECTION: PORTFOLIO GRID ─── */
+#portfolio { background:var(--white); color:var(--black); padding:100px 40px; }
+.portfolio-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:50px; }
+.portfolio-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,10vw,140px); line-height:1; letter-spacing:-.02em; }
+.portfolio-count { font-size:11px; letter-spacing:.3em; opacity:.3; text-transform:uppercase; padding-bottom:12px; }
+.portfolio-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:2px; background:rgba(0,0,0,.06); }
+.portfolio-card { background:var(--white); position:relative; cursor:pointer; overflow:hidden; border:1px solid rgba(0,0,0,.08); transition:all .3s; }
+.portfolio-card:hover { transform:translateY(-4px); }
+.portfolio-card:hover .pf-card-cover { transform:scale(1.05); }
+.pf-card-cover-wrap { width:100%; aspect-ratio:4/3; background:var(--black); overflow:hidden; position:relative; }
+.pf-card-cover { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+.pf-card-no-cover { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:clamp(20px,3vw,40px); color:rgba(255,255,255,.2); letter-spacing:.1em; }
+.pf-card-info { padding:20px; }
+.pf-card-num { font-size:10px; letter-spacing:.2em; opacity:.3; margin-bottom:6px; }
+.pf-card-title { font-family:'Anton',sans-serif; font-size:22px; letter-spacing:-.01em; margin-bottom:4px; }
+.pf-card-cat { font-size:10px; letter-spacing:.15em; text-transform:uppercase; opacity:.4; }
+
+/* ─── PORTFOLIO CARD EDIT OVERLAY ─── */
+.pf-card-edit-overlay { position:absolute; inset:0; background:rgba(0,0,0,.7); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:2; }
+.pf-card-edit-overlay.visible { opacity:1; }
+.pf-card-edit-icon { font-size:40px; opacity:.8; }
+.pf-card-edit-text { font-size:11px; letter-spacing:.15em; color:#fff; opacity:.7; text-align:center; }
+.pf-card-upload-btn { position:absolute; bottom:12px; right:12px; z-index:3; font-family:'Space Grotesk',sans-serif; font-size:9px; letter-spacing:.1em; background:var(--white); color:var(--black); border:none; padding:5px 10px; cursor:pointer; display:none; text-transform:uppercase; transition:all .2s; }
+.pf-card-upload-btn:hover { background:var(--black); color:var(--white); outline:1px solid var(--white); }
+.editing-section .pf-card-upload-btn { display:block; }
+
+/* ─── PORTFOLIO DETAIL MODAL ─── */
+.port-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.95); z-index:10000; display:none; justify-content:center; align-items:flex-start; overflow-y:auto; padding:60px 20px; }
+.port-modal-overlay.open { display:flex; }
+.port-modal { background:var(--black); border:1px solid rgba(255,255,255,.1); max-width:900px; width:100%; position:relative; }
+.port-modal-close { position:absolute; top:16px; right:20px; font-size:28px; color:var(--white); background:none; border:none; cursor:pointer; z-index:10; opacity:.5; transition:opacity .2s; }
+.port-modal-close:hover { opacity:1; }
+.port-modal-images { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:2px; background:rgba(255,255,255,.05); }
+.port-modal-img-wrap { aspect-ratio:4/3; overflow:hidden; cursor:pointer; position:relative; background:var(--gray); }
+.port-modal-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.port-modal-img-wrap:hover img { transform:scale(1.05); }
+.port-modal-img-wrap .set-cover-btn { position:absolute; bottom:6px; right:6px; font-size:9px; letter-spacing:.1em; background:rgba(0,0,0,.7); color:#fff; border:1px solid rgba(255,255,255,.3); padding:3px 8px; cursor:pointer; display:none; text-transform:uppercase; }
+.port-modal-img-wrap:hover .set-cover-btn, .editing-modal .set-cover-btn { display:block; }
+.port-modal-add-img { aspect-ratio:4/3; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px dashed rgba(255,255,255,.15); cursor:pointer; color:rgba(255,255,255,.3); font-size:11px; letter-spacing:.15em; transition:all .2s; }
+.port-modal-add-img:hover { border-color:rgba(255,255,255,.5); color:rgba(255,255,255,.7); }
+.port-modal-add-img span { font-size:36px; margin-bottom:6px; opacity:.4; }
+.port-modal-info { padding:30px; }
+.port-modal-title { font-family:'Anton',sans-serif; font-size:clamp(30px,5vw,56px); letter-spacing:-.02em; margin-bottom:6px; }
+.port-modal-meta { font-size:11px; letter-spacing:.2em; text-transform:uppercase; opacity:.3; margin-bottom:16px; }
+.port-modal-desc { font-size:14px; line-height:1.8; opacity:.5; margin-bottom:20px; }
+.port-modal-link { display:inline-block; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--white); text-decoration:none; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:3px; transition:border-color .2s; }
+.port-modal-link:hover { border-color:var(--white); }
+.port-modal-del { margin-top:20px; font-size:10px; letter-spacing:.15em; color:rgba(255,80,80,.6); background:transparent; border:1px solid rgba(255,80,80,.3); padding:6px 16px; cursor:pointer; display:none; }
+.editing-modal .port-modal-del { display:inline-block; }
+.port-modal-del:hover { background:rgba(255,80,80,.15); }
+
+/* ─── LIGHTBOX ─── */
+.lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,.96); z-index:100001; display:none; align-items:center; justify-content:center; cursor:zoom-out; }
+.lightbox-overlay.open { display:flex; }
+.lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; }
+.lightbox-close { position:absolute; top:20px; right:30px; font-size:40px; color:#fff; background:none; border:none; cursor:pointer; opacity:.5; transition:opacity .2s; }
+.lightbox-close:hover { opacity:1; }
+
+/* ─── SECTION: CONTACT ─── */
+#contact { background:var(--black); padding:120px 40px; position:relative; overflow:hidden; }
+.contact-bg-text { position:absolute; font-family:'Anton',sans-serif; font-size:clamp(80px,14vw,220px); opacity:.04; top:50%; left:50%; transform:translate(-50%,-50%); white-space:nowrap; pointer-events:none; letter-spacing:-.04em; }
+.contact-inner { max-width:1000px; margin:0 auto; position:relative; z-index:1; }
+.contact-label { font-size:11px; letter-spacing:.4em; text-transform:uppercase; opacity:.3; margin-bottom:40px; }
+.contact-cta { font-family:'Anton',sans-serif; font-size:clamp(50px,8vw,120px); line-height:.9; letter-spacing:-.03em; margin-bottom:20px; }
+.contact-cta span { color:transparent; -webkit-text-stroke:1px var(--white); }
+.contact-desc { font-size:13px; opacity:.4; line-height:1.8; margin-bottom:40px; max-width:400px; }
+.contact-links { display:flex; flex-wrap:wrap; gap:40px; }
+.contact-item { display:flex; flex-direction:column; gap:4px; }
+.contact-item-label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; opacity:.2; }
+.contact-item-value { font-size:13px; letter-spacing:.1em; color:var(--white); text-decoration:none; border-bottom:1px solid rgba(255,255,255,.15); padding-bottom:3px; transition:border-color .2s; }
+.contact-item-value:hover { border-color:var(--white); }
+
+/* ─── EDIT MODE GLOBAL ─── */
+.edit-toggle { position:relative; font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; background:transparent; color:var(--black); border:1px solid rgba(0,0,0,.3); padding:6px 18px; cursor:pointer; transition:all .2s; z-index:1; }
+.edit-toggle:hover { border-color:var(--black); background:rgba(0,0,0,.03); }
+.edit-toggle.active { background:var(--black); color:var(--white); border-color:var(--black); }
+#contact .edit-toggle, #resume .edit-toggle { color:var(--white); border-color:rgba(255,255,255,.3); }
+#contact .edit-toggle:hover, #resume .edit-toggle:hover { border-color:var(--white); }
+#contact .edit-toggle.active, #resume .edit-toggle.active { background:var(--white); color:var(--black); border-color:var(--white); }
+
+.edit-inline { font-family:'Space Grotesk',sans-serif; background:transparent; border:none; border-bottom:1px dashed currentColor; color:inherit; opacity:.6; outline:none; font-size:inherit; letter-spacing:inherit; width:100%; padding:2px 0; }
+.edit-inline:focus { opacity:1; }
+.edit-textarea { font-family:'Space Grotesk',sans-serif; background:transparent; border:1px dashed currentColor; color:inherit; opacity:.6; outline:none; font-size:inherit; line-height:1.7; width:100%; padding:8px; resize:vertical; min-height:80px; }
+.edit-textarea:focus { opacity:1; }
+
+.editable-section { position:relative; }
+.edit-hint { display:none; font-size:10px; letter-spacing:.15em; opacity:.3; position:absolute; top:-20px; right:0; text-transform:uppercase; }
+.editing-section .edit-hint { display:block; }
+
+.btn-add { font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase; background:transparent; border:1px dashed rgba(255,255,255,.2); color:rgba(255,255,255,.5); padding:12px 20px; cursor:pointer; transition:all .2s; margin-top:16px; }
+.btn-add:hover { border-style:solid; border-color:var(--white); color:var(--white); }
+#about .btn-add, #portfolio .btn-add { color:rgba(0,0,0,.4); border-color:rgba(0,0,0,.2); }
+#about .btn-add:hover, #portfolio .btn-add:hover { color:var(--black); border-color:var(--black); }
+.btn-del-sm { font-size:10px; letter-spacing:.1em; background:transparent; color:rgba(255,80,80,.5); border:1px solid rgba(255,80,80,.2); padding:2px 10px; cursor:pointer; margin-left:8px; transition:all .2s; }
+.btn-del-sm:hover { background:rgba(255,80,80,.15); color:rgba(255,80,80,1); border-color:rgba(255,80,80,.6); }
+
+/* ─── GLOBAL EDIT TOAST ─── */
+.edit-toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--white); color:var(--black); font-size:11px; letter-spacing:.15em; padding:12px 28px; z-index:99999; opacity:0; transition:opacity .3s, transform .3s; pointer-events:none; border:2px solid var(--black); }
+.edit-toast.show { opacity:1; transform:translateX(-50%) translateY(-10px); }
+
+/* ─── SCROLL ANIMATION ─── */
+.reveal { opacity:0; transform:translateY(40px); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal.visible { opacity:1; transform:none; }
+
+/* ─── GLITCH ─── */
+.glitch { position:relative; display:inline-block; }
+.glitch::before, .glitch::after { content:attr(data-text); position:absolute; left:0; top:0; width:100%; height:100%; font-family:inherit; font-size:inherit; font-weight:inherit; line-height:inherit; letter-spacing:inherit; }
+.glitch::before { color:var(--white); animation:glitch1 3.5s infinite; clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%); }
+.glitch::after { color:var(--white); animation:glitch2 3.5s infinite; clip-path:polygon(0 60%,100% 60%,100% 75%,0 75%); }
+@keyframes glitch1 { 0%,89%,100%{transform:none;opacity:0} 90%{transform:translate(-3px,1px) skewX(4deg);opacity:.8} 92%{transform:translate(3px,-1px);opacity:.8} 94%{transform:none;opacity:0} 96%{transform:translate(-5px,2px);opacity:.8} 98%{transform:none;opacity:0} }
+@keyframes glitch2 { 0%,87%,100%{transform:none;opacity:0} 88%{transform:translate(4px,-2px) skewX(-3deg);opacity:.7} 90%{transform:translate(-2px,1px);opacity:.7} 92%{transform:none;opacity:0} }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:768px) {
+  nav { padding:16px 20px; }
+  .nav-links { gap:16px; }
+  #hero, #about, #resume, #portfolio, #contact { padding-left:20px; padding-right:20px; }
+  .about-grid { grid-template-columns:1fr; gap:30px; }
+  .about-avatar { width:120px; height:120px; font-size:50px; }
+  .resume-grid { grid-template-columns:1fr; gap:30px; }
+  .portfolio-grid { grid-template-columns:1fr; }
+  .contact-links { gap:20px; }
+  .skill-item { grid-template-columns:100px 1fr 40px; gap:12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- GLOBAL EDIT BAR -->
+<div class="global-edit-bar">
+  <button class="btn-global-edit" id="btnGlobalEdit" title="进入编辑模式后可修改所有内容">✎ 编辑模式</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">夏文慧</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#resume">Resume</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><button class="btn-pdf-nav" id="btnPdfNav" title="导出简历为PDF">📄 PDF</button></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-number">EST. 2024 — ∞</div>
+  <div class="hero-line1 distort-text" id="hl1"><span class="glitch" data-text="DESIGN">DESIGN</span></div>
+  <div class="hero-line2 distort-text" id="hl2">WITHOUT</div>
+  <div class="hero-line3 distort-text" id="hl3">RULES.</div>
+  <div class="hero-sub reveal">夏文慧 Linda · 个人作品集 · Portfolio</div>
+  <div class="hero-marquee-wrap">
+    <div class="hero-marquee">
+      <span>BRANDING</span><span>·</span><span>IDENTITY</span><span>·</span><span>ART DIRECTION</span><span>·</span><span>WEB DESIGN</span><span>·</span><span>MOTION</span><span>·</span><span>STRATEGY</span><span>·</span>
+      <span>BRANDING</span><span>·</span><span>IDENTITY</span><span>·</span><span>ART DIRECTION</span><span>·</span><span>WEB DESIGN</span><span>·</span><span>MOTION</span><span>·</span><span>STRATEGY</span><span>·</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="editable-section">
+  <div class="about-inner">
+    <div class="about-tag reveal">— About / 01</div>
+    <div class="about-num">01</div>
+    <div class="about-grid">
+      <div class="about-avatar-wrap reveal">
+        <div class="about-avatar" id="avatarContainer">
+          <img id="avatarImg" src="" style="display:none" alt="Avatar">
+          <span class="about-avatar-placeholder" id="avatarPlaceholder">XW</span>
+        </div>
+        <label class="about-upload edit-only" id="avatarUpload"><input type="file" accept="image/*" hidden id="avatarInput">更新头像</label>
+      </div>
+      <div>
+        <div class="about-name reveal" id="aboutName">夏文慧 Linda</div>
+        <div class="about-title-sm reveal" id="aboutTitle">Designer & Creative</div>
+        <div class="about-bio reveal" id="aboutBio">热爱设计，不拘泥于规则。将想法转化为独特的视觉语言，在无序中寻找秩序。</div>
+        <div class="edit-hint">双击文字编辑 · 点击头像上传</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUME -->
+<section id="resume" class="editable-section">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px">
+    <div class="resume-title reveal">RESUME</div>
+    <div class="edit-hint" style="position:static">点击文字编辑 · 拖动进度条调技能</div>
+  </div>
+  <div class="resume-grid">
+    <div>
+      <div class="resume-col-title reveal">Education 教育经历</div>
+      <div id="eduList"></div>
+      <button class="btn-add edit-only" id="btnAddEdu">+ 添加教育经历</button>
+    </div>
+    <div>
+      <div class="resume-col-title reveal">Experience 工作经历</div>
+      <div id="expList"></div>
+      <button class="btn-add edit-only" id="btnAddExp">+ 添加工作经历</button>
+    </div>
+    <div class="skills-section">
+      <div class="resume-col-title reveal">Skills 技能</div>
+      <div id="skillList"></div>
+      <button class="btn-add edit-only" id="btnAddSkill">+ 添加技能</button>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="editable-section">
+  <div class="portfolio-header">
+    <div class="portfolio-title reveal">PORTFOLIO</div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <div class="portfolio-count reveal" id="pfCount">006 Projects</div>
+      <div class="edit-hint" style="position:static">点击作品查看详情 · 编辑模式可增删</div>
+    </div>
+  </div>
+  <div class="portfolio-grid" id="pfGrid"></div>
+  <button class="btn-add edit-only" id="btnAddPf">+ 添加作品项目</button>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-bg-text" id="contactBgText">LINDA</div>
+  <div class="contact-inner">
+    <div class="contact-label reveal">— Contact / 04</div>
+    <div class="contact-cta reveal">GOT A <span>PROJECT?</span><br>LET'S MAKE<br><span>MAGIC.</span></div>
+    <p class="contact-desc reveal" id="contactDesc">欢迎通过以下方式联系我，期待与您的合作。</p>
+    <div class="contact-links reveal" id="contactLinks"></div>
+  </div>
+</section>
+
+<!-- PORTFOLIO DETAIL MODAL -->
+<div class="port-modal-overlay" id="pfModalOverlay">
+  <div class="port-modal" id="pfModal">
+    <button class="port-modal-close" id="pfModalClose">&times;</button>
+    <div class="port-modal-images" id="pfModalImages"></div>
+    <div class="port-modal-info">
+      <div class="port-modal-title" id="pfModalTitle"></div>
+      <div class="port-modal-meta" id="pfModalMeta"></div>
+      <div class="port-modal-desc" id="pfModalDesc"></div>
+      <a class="port-modal-link" id="pfModalLink" href="#" target="_blank">View Project</a>
+      <br>
+      <button class="port-modal-del" id="pfModalDel">✕ 删除此作品</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 夏文慧 Linda — All wrongs reserved</div>
+  <div class="footer-copy">DESIGN WITHOUT RULES</div>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// ─── CURSOR ───
+// ══════════════════════════════════════
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+['a','button','.portfolio-card','.port-modal-img-wrap','.about-avatar','label'].forEach(sel => {
+  document.querySelectorAll(sel).forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+  });
+});
+document.addEventListener('mouseover', e => {
+  const t = e.target.closest('a, button, .portfolio-card, .port-modal-img-wrap, .about-avatar, label');
+  if (t) cursor.classList.add('expand');
+});
+document.addEventListener('mouseout', e => {
+  const t = e.target.closest('a, button, .portfolio-card, .port-modal-img-wrap, .about-avatar, label');
+  if (t && !e.relatedTarget?.closest('a, button, .portfolio-card, .port-modal-img-wrap, .about-avatar, label')) {
+    cursor.classList.remove('expand');
+  }
+});
+
+// ══════════════════════════════════════
+// ─── SCROLL REVEAL ───
+// ══════════════════════════════════════
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+function reObserve() { document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el)); }
+
+// ══════════════════════════════════════
+// ─── HERO PARALLAX + DISTORT ───
+// ══════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const s = window.scrollY, p = Math.min(s / window.innerHeight, 1), sk = p * 12;
+  const h1=document.getElementById('hl1'), h2=document.getElementById('hl2'), h3=document.getElementById('hl3');
+  h1.style.transform = `translateY(${p*-60}px) skewX(${-sk*.5}deg) scaleX(${1+p*.18})`;
+  h2.style.transform = `translateY(${p*-30}px) skewX(${sk}deg) translateX(${p*40}px)`;
+  h3.style.transform = `translateY(${p*-10}px) scaleX(${1-p*.06}) scaleY(${1-p*.08})`;
+  h1.style.opacity = 1-p*.6; h2.style.opacity = 1-p*.8; h3.style.opacity = 1-p*.5;
+});
+document.getElementById('hero').addEventListener('mousemove', e => {
+  const dx = (e.clientX - innerWidth/2) / (innerWidth/2);
+  document.getElementById('hl1').style.letterSpacing = `${-0.03+dx*.02}em`;
+  document.getElementById('hl3').style.letterSpacing = `${-0.04-dx*.01}em`;
+});
+// Glitch
+setInterval(() => {
+  const g = document.querySelector('.glitch');
+  if (g) { g.style.animation='none'; g.offsetHeight; g.style.animation=''; }
+}, 6000);
+
+// ══════════════════════════════════════
+// ─── DATA MODEL ───
+// ══════════════════════════════════════
+const DEF = {
+  about: {
+    name: '夏文慧 Linda',
+    title: 'Designer & Creative',
+    bio: '热爱设计，不拘泥于规则。将想法转化为独特的视觉语言，在无序中寻找秩序。',
+    avatar: ''
+  },
+  resume: {
+    education: [
+      { school: 'University of Design', degree: 'B.A. Visual Communication', date: '2020 — 2024', desc: '主修视觉传达设计，辅修数字媒体。毕业作品获学院最佳创意奖。' },
+      { school: 'Art Academy', degree: 'Design Foundation', date: '2018 — 2020', desc: '系统学习设计基础理论，参与多个跨学科项目。' }
+    ],
+    experience: [
+      { company: 'Creative Studio', role: 'Junior Designer', date: '2024 — Present', desc: '负责品牌视觉设计和社交媒体视觉内容创作，参与多个商业项目。' },
+      { company: 'Design Agency', role: 'Design Intern', date: '2023 — 2024', desc: '协助资深设计师完成品牌VI、包装设计等项目，积累实战经验。' }
+    ],
+    skills: [
+      { name: 'Photoshop', level: 90 },
+      { name: 'Illustrator', level: 85 },
+      { name: 'Figma', level: 80 },
+      { name: 'After Effects', level: 70 },
+      { name: 'Blender / 3D', level: 55 },
+      { name: 'HTML / CSS', level: 60 }
+    ]
+  },
+  portfolio: [
+    { title: 'OBLIVION BRAND / 湮灭品牌', cat: 'Identity · Print / 品牌识别·印刷', year: '2024', desc: 'A complete brand identity system for a fictional avant-garde fashion label.\n为虚构前卫时装品牌打造的完整品牌识别系统。', link: '', cover: '', images: [] },
+    { title: 'FRAGMENT DIGITAL / 碎片数字', cat: 'Web · Motion / 网页·动效', year: '2024', desc: 'Interactive web experience exploring digital fragmentation and reconstruction.\n探索数字碎片与重构的交互式网页体验。', link: '', cover: '', images: [] },
+    { title: 'ZERO GALLERY / 零度画廊', cat: 'Art Direction / 艺术指导', year: '2025', desc: 'Art direction and spatial design for an experimental gallery exhibition.\n实验性画廊展览的艺术指导与空间设计。', link: '', cover: '', images: [] },
+    { title: 'VOID OBJECTS / 虚空之物', cat: 'Product · 3D / 产品·三维', year: '2025', desc: 'A series of 3D rendered objects exploring the tension between form and void.\n探索形态与虚空张力的3D渲染物件系列。', link: '', cover: '', images: [] },
+    { title: 'AXIS FASHION / 轴线时装', cat: 'Campaign · Brand / 营销·品牌', year: '2025', desc: 'Full campaign creative direction for a streetwear brand launch.\n街潮品牌发布的全案创意指导。', link: '', cover: '', images: [] },
+    { title: 'NULL SPACE / 虚空空间', cat: 'Experience · Digital / 体验·数字', year: '2026', desc: 'Immersive digital experience blending sound, motion and interactive design.\n融合声音、动效与交互设计的沉浸式数字体验。', link: '', cover: '', images: [] }
+  ],
+  contact: [
+    { label: 'Email', value: 'xiawenhui@example.com', href: 'mailto:xiawenhui@example.com' },
+    { label: 'Phone', value: '+86 138-0000-0000', href: 'tel:+8613800000000' },
+    { label: '小红书', value: '@夏文慧', href: '#' },
+    { label: '站酷', value: 'ZCOOL Portfolio', href: '#' },
+    { label: '微信', value: 'linda_design', href: '#' }
+  ]
+};
+
+const KEY = 'brutalist_portfolio_full';
+let data = JSON.parse(JSON.stringify(DEF));
+let globalEdit = false;
+let currentPfIdx = -1;
+
+function loadData() {
+  try {
+    const s = localStorage.getItem(KEY);
+    if (s) { const p = JSON.parse(s); data = deepMerge(JSON.parse(JSON.stringify(DEF)), p); }
+  } catch(e) {}
+}
+function saveData() { localStorage.setItem(KEY, JSON.stringify(data)); }
+function deepMerge(base, override) {
+  for (const k in override) {
+    if (override[k] && typeof override[k] === 'object' && !Array.isArray(override[k]) && base[k] && typeof base[k] === 'object') {
+      deepMerge(base[k], override[k]);
+    } else { base[k] = override[k]; }
+  }
+  return base;
+}
+
+// ══════════════════════════════════════
+// ─── TOAST ───
+// ══════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  let t = document.getElementById('editToast');
+  if (!t) { t = document.createElement('div'); t.id = 'editToast'; t.className = 'edit-toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ══════════════════════════════════════
+// ─── RENDER: ABOUT ───
+// ══════════════════════════════════════
+function renderAbout() {
+  document.getElementById('aboutName').textContent = data.about.name;
+  document.getElementById('aboutTitle').textContent = data.about.title;
+  document.getElementById('aboutBio').textContent = data.about.bio;
+  const img = document.getElementById('avatarImg');
+  const ph = document.getElementById('avatarPlaceholder');
+  if (data.about.avatar) { img.src = data.about.avatar; img.style.display = ''; ph.style.display = 'none'; }
+  else { img.style.display = 'none'; ph.style.display = ''; }
+}
+
+// About editable
+['aboutName','aboutTitle','aboutBio'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('dblclick', () => {
+    if (!globalEdit) return;
+    const field = id.replace('about','').toLowerCase();
+    const orig = el.textContent;
+    const isBio = field === 'bio';
+    const input = document.createElement(isBio ? 'textarea' : 'input');
+    input.className = isBio ? 'edit-textarea' : 'edit-inline';
+    input.value = orig;
+    if (!isBio) input.style.fontFamily = id === 'aboutName' ? "'Anton',sans-serif" : '';
+    input.style.fontSize = id === 'aboutName' ? 'clamp(50px,7vw,100px)' : '';
+    el.textContent = ''; el.appendChild(input); input.focus(); input.select();
+    const save = () => {
+      const v = input.value.trim();
+      data.about[field] = v || (field === 'name' ? '夏文慧 Linda' : (field === 'title' ? 'Designer & Creative' : ''));
+      saveData(); renderAbout();
+    };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && !isBio) { e.preventDefault(); input.blur(); } });
+  });
+});
+
+// Avatar upload
+document.getElementById('avatarInput').addEventListener('change', function() {
+  const f = this.files[0]; if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => { data.about.avatar = reader.result; saveData(); renderAbout(); toast('头像已更新'); };
+  reader.readAsDataURL(f);
+});
+
+// ══════════════════════════════════════
+// ─── RENDER: RESUME ───
+// ══════════════════════════════════════
+function renderResume() {
+  const eduList = document.getElementById('eduList');
+  eduList.innerHTML = data.resume.education.map((e, i) => `
+    <div class="resume-item" data-idx="${i}" data-type="education">
+      <div class="resume-item-title" data-field="school">${esc(e.school)}</div>
+      <div class="resume-item-sub" data-field="degree">${esc(e.degree)}</div>
+      <div class="resume-item-date" data-field="date">${esc(e.date)}</div>
+      <div class="resume-item-desc" data-field="desc">${esc(e.desc)}</div>
+      <button class="btn-del-sm edit-only" data-del="education" data-idx="${i}">删除</button>
+    </div>`).join('');
+
+  const expList = document.getElementById('expList');
+  expList.innerHTML = data.resume.experience.map((e, i) => `
+    <div class="resume-item" data-idx="${i}" data-type="experience">
+      <div class="resume-item-title" data-field="company">${esc(e.company)}</div>
+      <div class="resume-item-sub" data-field="role">${esc(e.role)}</div>
+      <div class="resume-item-date" data-field="date">${esc(e.date)}</div>
+      <div class="resume-item-desc" data-field="desc">${esc(e.desc)}</div>
+      <button class="btn-del-sm edit-only" data-del="experience" data-idx="${i}">删除</button>
+    </div>`).join('');
+
+  const skillList = document.getElementById('skillList');
+  skillList.innerHTML = data.resume.skills.map((s, i) => `
+    <div class="skill-item" data-idx="${i}">
+      <span class="skill-name" data-field="name">${esc(s.name)}</span>
+      <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:${s.level}%"></div></div>
+      <span class="skill-pct skill-pct-static">${s.level}%</span>
+      <span class="skill-input-wrap">
+        <input type="range" class="skill-range" value="${s.level}" min="0" max="100" data-field="level" data-idx="${i}">
+        <input class="skill-pct-input" value="${s.level}" data-field="level" data-idx="${i}">
+      </span>
+      <button class="btn-del-sm edit-only" data-del="skill" data-idx="${i}">删除</button>
+    </div>`).join('');
+
+  // Skill range listeners
+  skillList.querySelectorAll('.skill-range').forEach(r => {
+    r.addEventListener('input', () => {
+      const idx = parseInt(r.dataset.idx);
+      data.resume.skills[idx].level = parseInt(r.value);
+      saveData();
+      renderResume();
+    });
+  });
+
+  // Resume item inline editing
+  document.querySelectorAll('#eduList .resume-item-title, #eduList .resume-item-sub, #eduList .resume-item-date, #eduList .resume-item-desc, #expList .resume-item-title, #expList .resume-item-sub, #expList .resume-item-date, #expList .resume-item-desc').forEach(el => {
+    el.addEventListener('dblclick', function() {
+      if (!globalEdit) return;
+      const item = this.closest('.resume-item');
+      const type = item.dataset.type;
+      const idx = parseInt(item.dataset.idx);
+      const field = this.dataset.field;
+      const orig = this.textContent;
+      const input = document.createElement('input');
+      input.className = 'edit-inline';
+      input.value = orig;
+      this.textContent = ''; this.appendChild(input); input.focus(); input.select();
+      const save = () => {
+        data.resume[type][idx][field] = input.value.trim();
+        saveData(); renderResume();
+      };
+      input.addEventListener('blur', save);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
+    });
+  });
+
+  // Delete buttons
+  document.querySelectorAll('.btn-del-sm').forEach(b => {
+    b.addEventListener('click', function() {
+      const type = this.dataset.del;
+      const idx = parseInt(this.dataset.idx);
+      if (type === 'education') { data.resume.education.splice(idx, 1); }
+      else if (type === 'experience') { data.resume.experience.splice(idx, 1); }
+      else if (type === 'skill') { data.resume.skills.splice(idx, 1); }
+      saveData(); renderResume(); renderEditState();
+      toast('已删除');
+    });
+  });
+}
+
+// Add education
+document.getElementById('btnAddEdu').addEventListener('click', () => {
+  data.resume.education.push({ school: 'New School', degree: 'Degree', date: '202X — 202X', desc: 'Description' });
+  saveData(); renderResume(); renderEditState(); toast('已添加教育经历');
+});
+document.getElementById('btnAddExp').addEventListener('click', () => {
+  data.resume.experience.push({ company: 'New Company', role: 'Role', date: '202X — 202X', desc: 'Description' });
+  saveData(); renderResume(); renderEditState(); toast('已添加工作经历');
+});
+document.getElementById('btnAddSkill').addEventListener('click', () => {
+  data.resume.skills.push({ name: 'New Skill', level: 50 });
+  saveData(); renderResume(); renderEditState(); toast('已添加技能');
+});
+
+// ══════════════════════════════════════
+// ─── RENDER: PORTFOLIO ───
+// ══════════════════════════════════════
+function renderPortfolio() {
+  const grid = document.getElementById('pfGrid');
+  grid.innerHTML = data.portfolio.map((p, i) => {
+    const num = String(i + 1).padStart(3, '0');
+    const editOverlay = globalEdit ? `
+      <div class="pf-card-edit-overlay visible">
+        <span class="pf-card-edit-icon">✎</span>
+        <span class="pf-card-edit-text">点击编辑 · 上传图片</span>
+      </div>` : '';
+    const uploadBtn = globalEdit ? `<button class="pf-card-upload-btn" data-pfidx="${i}" title="快捷上传封面图">📷 封面</button>` : '';
+    return `<div class="portfolio-card reveal" data-pfidx="${i}" style="transition-delay:${i * 0.05}s">
+      <div class="pf-card-cover-wrap">
+        ${p.cover ? `<img class="pf-card-cover" src="${p.cover}" alt="">` : `<div class="pf-card-no-cover">${esc(p.title)}</div>`}
+        ${editOverlay}
+        ${uploadBtn}
+      </div>
+      <div class="pf-card-info">
+        <div class="pf-card-num">${num}</div>
+        <div class="pf-card-title">${esc(p.title)}</div>
+        <div class="pf-card-cat">${esc(p.cat)} — ${esc(p.year)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('pfCount').textContent = `${String(data.portfolio.length).padStart(3, '0')} Projects`;
+
+  // Click to open detail
+  grid.querySelectorAll('.portfolio-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.pf-card-upload-btn')) return;
+      openPfDetail(parseInt(card.dataset.pfidx));
+    });
+  });
+
+  // Upload cover button on cards
+  grid.querySelectorAll('.pf-card-upload-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.pfidx);
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.hidden = true;
+      document.body.appendChild(fileInput);
+      fileInput.click();
+      fileInput.addEventListener('change', function() {
+        const f = this.files[0]; if (!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          data.portfolio[idx].cover = reader.result;
+          if (!data.portfolio[idx].images.length) data.portfolio[idx].images.push(reader.result);
+          saveData(); renderPortfolio();
+          toast('封面已更新');
+        };
+        reader.readAsDataURL(f);
+        document.body.removeChild(fileInput);
+      });
+    });
+  });
+
+  reObserve();
+}
+
+// Add portfolio - auto open detail modal
+document.getElementById('btnAddPf').addEventListener('click', () => {
+  data.portfolio.push({ title: 'NEW PROJECT / 新项目', cat: 'Category / 分类', year: '2026', desc: 'Project description\n项目描述', link: '', cover: '', images: [] });
+  saveData(); renderPortfolio();
+  // Auto-open detail modal so user can immediately add images
+  const newIdx = data.portfolio.length - 1;
+  openPfDetail(newIdx);
+  toast('新项目已创建，可在此上传图片和编辑信息');
+});
+
+// ══════════════════════════════════════
+// ─── PORTFOLIO DETAIL ───
+// ══════════════════════════════════════
+function openPfDetail(idx) {
+  currentPfIdx = idx;
+  const p = data.portfolio[idx];
+  const modal = document.getElementById('pfModal');
+  modal.className = 'port-modal' + (globalEdit ? ' editing-modal' : '');
+
+  document.getElementById('pfModalTitle').textContent = p.title;
+  document.getElementById('pfModalMeta').textContent = `${p.cat} — ${p.year}`;
+  document.getElementById('pfModalDesc').textContent = p.desc;
+  document.getElementById('pfModalLink').href = p.link || '#';
+  document.getElementById('pfModalLink').style.display = p.link ? '' : 'none';
+
+  // Images grid
+  const imgGrid = document.getElementById('pfModalImages');
+  let imgsHtml = p.images.map((img, i) => `
+    <div class="port-modal-img-wrap">
+      <img src="${img}" alt="" data-imgidx="${i}">
+      <button class="set-cover-btn" data-setcover="${i}">设为封面</button>
+    </div>`).join('');
+  if (globalEdit) {
+    imgsHtml += `<div class="port-modal-add-img" id="addPfImg"><span>＋</span>点击上传作品图片</div>`;
+  }
+  imgGrid.innerHTML = imgsHtml;
+
+  // Image click → lightbox
+  imgGrid.querySelectorAll('.port-modal-img-wrap img').forEach(img => {
+    img.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+  // Set cover
+  imgGrid.querySelectorAll('.set-cover-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const coverIdx = parseInt(btn.dataset.setcover);
+      p.cover = p.images[coverIdx];
+      saveData(); renderPortfolio(); toast('已设为封面');
+    });
+  });
+  // Add image - use a clean approach with delegated click
+  if (globalEdit) {
+    const addBtn = document.getElementById('addPfImg');
+    if (addBtn) {
+      addBtn.onclick = () => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.multiple = true;
+        fileInput.onchange = function() {
+          if (!this.files.length) return;
+          Array.from(this.files).forEach(f => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              p.images.push(reader.result);
+              if (!p.cover) p.cover = reader.result;
+              saveData(); renderPortfolio(); openPfDetail(idx);
+              toast('图片已上传 ✓');
+            };
+            reader.readAsDataURL(f);
+          });
+        };
+        fileInput.click();
+      };
+    }
+  }
+
+  // Delete project
+  document.getElementById('pfModalDel').onclick = () => {
+    if (confirm(`确定要删除「${p.title}」吗？`)) {
+      data.portfolio.splice(idx, 1);
+      saveData(); renderPortfolio(); closePfModal(); toast('作品已删除');
+    }
+  };
+
+  document.getElementById('pfModalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePfModal() {
+  document.getElementById('pfModalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentPfIdx = -1;
+}
+
+document.getElementById('pfModalClose').addEventListener('click', closePfModal);
+document.getElementById('pfModalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('pfModalOverlay')) closePfModal();
+});
+
+// Detail inline editing (double-click)
+['pfModalTitle','pfModalMeta','pfModalDesc'].forEach(id => {
+  document.getElementById(id).addEventListener('dblclick', function() {
+    if (!globalEdit || currentPfIdx < 0) return;
+    const p = data.portfolio[currentPfIdx];
+    const fieldMap = { pfModalTitle: 'title', pfModalMeta: null, pfModalDesc: 'desc' };
+    const field = fieldMap[id];
+    if (!field) return;
+    const orig = p[field];
+    const input = document.createElement('input');
+    input.className = 'edit-inline'; input.style.color = '#fff';
+    input.value = orig;
+    this.textContent = ''; this.appendChild(input); input.focus(); input.select();
+    const save = () => { p[field] = input.value.trim() || orig; saveData(); renderPortfolio(); openPfDetail(currentPfIdx); };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
+  });
+});
+
+// ══════════════════════════════════════
+// ─── LIGHTBOX ───
+// ══════════════════════════════════════
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+
+// ══════════════════════════════════════
+// ─── RENDER: CONTACT ───
+// ══════════════════════════════════════
+function renderContact() {
+  const links = document.getElementById('contactLinks');
+  links.innerHTML = data.contact.map((c, i) => `
+    <div class="contact-item">
+      <span class="contact-item-label">${esc(c.label)}</span>
+      <a class="contact-item-value" href="${esc(c.href)}" target="${c.href.startsWith('mailto') || c.href.startsWith('tel') ? '_self' : '_blank'}">${esc(c.value)}</a>
+      ${globalEdit ? `<button class="btn-del-sm" data-del="contact" data-idx="${i}">删除</button>` : ''}
+    </div>`).join('');
+
+  // Inline edit
+  links.querySelectorAll('.contact-item-value').forEach((el, i) => {
+    el.addEventListener('dblclick', function(e) {
+      if (!globalEdit) return;
+      e.preventDefault();
+      const orig = this.textContent;
+      const input = document.createElement('input');
+      input.className = 'edit-inline'; input.style.color = '#fff'; input.style.fontSize = '13px';
+      input.value = orig;
+      this.textContent = ''; this.appendChild(input); input.focus(); input.select();
+      const save = () => {
+        data.contact[i].value = input.value.trim() || orig;
+        if (data.contact[i].label === 'Email') data.contact[i].href = 'mailto:' + data.contact[i].value;
+        if (data.contact[i].label === 'Phone') data.contact[i].href = 'tel:' + data.contact[i].value;
+        saveData(); renderContact();
+      };
+      input.addEventListener('blur', save);
+      input.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); } });
+    });
+  });
+
+  // Delete
+  links.querySelectorAll('.btn-del-sm').forEach(b => {
+    b.addEventListener('click', function() {
+      const idx = parseInt(this.dataset.idx);
+      data.contact.splice(idx, 1);
+      saveData(); renderContact(); toast('已删除');
+    });
+  });
+}
+
+// ══════════════════════════════════════
+// ─── GLOBAL EDIT MODE ───
+// ══════════════════════════════════════
+function renderEditState() {
+  const sections = document.querySelectorAll('.editable-section');
+  sections.forEach(s => {
+    if (globalEdit) s.classList.add('editing-section');
+    else s.classList.remove('editing-section');
+  });
+  // Show/hide edit-only elements
+  document.querySelectorAll('.edit-only').forEach(el => {
+    el.style.display = globalEdit ? '' : 'none';
+  });
+  // Portfolio detail
+  const modal = document.getElementById('pfModal');
+  if (modal) modal.className = 'port-modal' + (globalEdit ? ' editing-modal' : '');
+  // Refresh contact for delete buttons
+  if (globalEdit || !globalEdit) renderContact();
+  // Resume for delete buttons
+  renderResume();
+  renderAbout();
+}
+
+document.getElementById('btnGlobalEdit').addEventListener('click', () => {
+  globalEdit = !globalEdit;
+  const btn = document.getElementById('btnGlobalEdit');
+  if (globalEdit) {
+    btn.textContent = '✓ 退出编辑';
+    btn.classList.add('active');
+    toast('编辑模式已开启 — 可修改所有内容、上传图片并实时保存');
+  } else {
+    btn.textContent = '✎ 编辑模式';
+    btn.classList.remove('active');
+    toast('已退出编辑，所有修改已保存 ✓');
+  }
+  renderEditState();
+  renderPortfolio();
+  if (currentPfIdx >= 0) openPfDetail(currentPfIdx);
+});
+
+// ══════════════════════════════════════
+// ─── PDF EXPORT (NAV BUTTON) ───
+// ══════════════════════════════════════
+document.getElementById('btnPdfNav').addEventListener('click', (e) => {
+  e.preventDefault();
+  toast('提示：请使用浏览器打印功能（Ctrl+P / Cmd+P），选择「另存为PDF」即可导出简历。建议在打印设置中取消页眉页脚。');
+  setTimeout(() => window.print(), 500);
+});
+
+// ══════════════════════════════════════
+// ─── UTILS ───
+// ══════════════════════════════════════
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+// ══════════════════════════════════════
+// ─── INIT ───
+// ══════════════════════════════════════
+loadData();
+renderAbout();
+renderResume();
+renderPortfolio();
+renderContact();
+renderEditState();
+</script>
+</body>
+</html>
