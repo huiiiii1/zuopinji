@@ -473,17 +473,66 @@ let currentPfIdx = -1;
 function loadData() {
   try {
     const s = localStorage.getItem(KEY);
-    if (s) { const p = JSON.parse(s); data = deepMerge(JSON.parse(JSON.stringify(DEF)), p); }
-  } catch(e) {}
+    if (s) {
+      const p = JSON.parse(s);
+      // Deep merge: saved data overrides defaults
+      data = JSON.parse(JSON.stringify(DEF));
+      mergeData(data, p);
+    }
+  } catch(e) { console.warn('loadData error:', e); }
 }
-function saveData() { localStorage.setItem(KEY, JSON.stringify(data)); }
-function deepMerge(base, override) {
-  for (const k in override) {
-    if (override[k] && typeof override[k] === 'object' && !Array.isArray(override[k]) && base[k] && typeof base[k] === 'object') {
-      deepMerge(base[k], override[k]);
-    } else { base[k] = override[k]; }
+function saveData() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(data));
+  } catch(e) {
+    console.error('saveData error (maybe quota exceeded):', e);
+    toast('⚠️ 保存失败 — 数据可能过大（图片太大），请压缩图片后重试');
   }
-  return base;
+}
+
+// Compress image data URL to reduce size before storing
+function compressImage(dataUrl, maxW, maxH, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl); // fallback: use original
+    img.src = dataUrl;
+  });
+}
+
+// Robust deep merge (handles arrays and falsy values correctly)
+function mergeData(base, override) {
+  for (const k in override) {
+    if (override[k] === null || override[k] === undefined) { base[k] = override[k]; continue; }
+    if (Array.isArray(override[k])) {
+      base[k] = override[k];
+    } else if (typeof override[k] === 'object' && typeof base[k] === 'object') {
+      mergeData(base[k], override[k]);
+    } else {
+      base[k] = override[k];
+    }
+  }
+}
+// Robust deep merge (handles arrays correctly)
+function mergeData(base, override) {
+  for (const k in override) {
+    if (override[k] === null || override[k] === undefined) { base[k] = override[k]; continue; }
+    if (Array.isArray(override[k])) {
+      base[k] = override[k]; // replace array entirely
+    } else if (typeof override[k] === 'object' && typeof base[k] === 'object') {
+      mergeData(base[k], override[k]);
+    } else {
+      base[k] = override[k];
+    }
+  }
 }
 
 // ══════════════════════════════════════
@@ -494,7 +543,28 @@ function toast(msg) {
   let t = document.getElementById('editToast');
   if (!t) { t = document.createElement('div'); t.id = 'editToast'; t.className = 'edit-toast'; document.body.appendChild(t); }
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Force save before page unload (catches refresh, close, navigation)
+window.addEventListener('beforeunload', () => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {} });
+
+// Compress image before storing as data URL (prevents localStorage quota errors)
+function compressImg(dataUrl, maxW, maxH, quality) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
 }
 
 // ══════════════════════════════════════
@@ -534,11 +604,16 @@ function renderAbout() {
   });
 });
 
-// Avatar upload
+// Avatar upload (with compression)
 document.getElementById('avatarInput').addEventListener('change', function() {
   const f = this.files[0]; if (!f) return;
   const reader = new FileReader();
-  reader.onload = () => { data.about.avatar = reader.result; saveData(); renderAbout(); toast('头像已更新 / Avatar updated'); };
+  reader.onload = async () => {
+    const compressed = await compressImg(reader.result, 400, 400, 0.8);
+    data.about.avatar = compressed;
+    saveData(); renderAbout();
+    toast('头像已更新 / Avatar updated');
+  };
   reader.readAsDataURL(f);
 });
 
@@ -687,9 +762,10 @@ function renderPortfolio() {
       fileInput.addEventListener('change', function() {
         const f = this.files[0]; if (!f) return;
         const reader = new FileReader();
-        reader.onload = () => {
-          data.portfolio[idx].cover = reader.result;
-          if (!data.portfolio[idx].images.length) data.portfolio[idx].images.push(reader.result);
+        reader.onload = async () => {
+          const compressed = await compressImg(reader.result, 800, 800, 0.8);
+          data.portfolio[idx].cover = compressed;
+          if (!data.portfolio[idx].images.length) data.portfolio[idx].images.push(compressed);
           saveData(); renderPortfolio();
           toast('封面已更新 / Cover updated');
         };
@@ -756,25 +832,26 @@ function openPfDetail(idx) {
       saveData(); renderPortfolio(); toast('已设为封面 / Set as cover');
     });
   });
-  // Add image - use a clean approach with delegated click
+  // Add image - compress before storing
   if (globalEdit) {
     const addBtn = document.getElementById('addPfImg');
     if (addBtn) {
       addBtn.onclick = () => {
         const fileInput = document.createElement('input');
         fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.multiple = true;
-        fileInput.onchange = function() {
+        fileInput.onchange = async function() {
           if (!this.files.length) return;
-          Array.from(this.files).forEach(f => {
+          for (const f of this.files) {
             const reader = new FileReader();
-            reader.onload = () => {
-              p.images.push(reader.result);
-              if (!p.cover) p.cover = reader.result;
+            reader.onload = async () => {
+              const compressed = await compressImg(reader.result, 1200, 1200, 0.8);
+              p.images.push(compressed);
+              if (!p.cover) p.cover = compressed;
               saveData(); renderPortfolio(); openPfDetail(idx);
               toast('图片已上传 ✓ / Image uploaded');
             };
             reader.readAsDataURL(f);
-          });
+          }
         };
         fileInput.click();
       };
@@ -900,6 +977,18 @@ function renderEditState() {
 }
 
 document.getElementById('btnGlobalEdit').addEventListener('click', () => {
+  // Capture any active inline edits before toggling
+  document.querySelectorAll('.edit-inline:focus, .edit-textarea:focus').forEach(input => {
+    const val = input.value.trim();
+    // Update data directly based on which field this is
+    const aboutEl = input.closest('#aboutName, #aboutTitle, #aboutBio');
+    if (aboutEl) {
+      const field = aboutEl.id.replace('about','').toLowerCase();
+      data.about[field] = val || (field === 'name' ? '夏文慧 Linda' : (field === 'title' ? '设计师 & 创意人 / Designer & Creative' : ''));
+    }
+  });
+
+  saveData(); // Force save before mode switch
   globalEdit = !globalEdit;
   const btn = document.getElementById('btnGlobalEdit');
   if (globalEdit) {
